@@ -1,0 +1,32 @@
+import type { Metadata } from 'next'
+import { Lora, Caveat } from 'next/font/google'
+import './globals.css'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import { CartProvider } from '@/components/CartProvider'
+
+const lora = Lora({ subsets: ['latin'], variable: '--font-lora' })
+const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat' })
+
+export const metadata: Metadata = {
+  title: 'Crave Corner | Handcrafted Food',
+  description: 'A cozy local café offering handcrafted meals and desserts.',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className={`${lora.variable} ${caveat.variable}`}>
+        <CartProvider>
+          <Navbar />
+          <div className="page-content">{children}</div>
+          <Footer />
+        </CartProvider>
+      </body>
+    </html>
+  )
+}

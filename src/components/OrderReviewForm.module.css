@@ -1,0 +1,58 @@
+.formBox {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--color-bg);
+  text-align: center;
+}
+
+.formBox h3 {
+  font-family: var(--font-caveat), cursive;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.formBox p {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 2rem;
+}
+
+.ratingRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ratingText {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--color-wood);
+}
+
+.formBox textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1.5px solid var(--color-wood);
+  background: var(--color-paper);
+  font-family: inherit;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  resize: none;
+}
+
+.formBox button {
+  background: var(--color-wood);
+  color: var(--color-bg);
+  padding: 0.8rem 2rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.formBox button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,265 @@
+.main {
+  padding: 2.8rem 1rem;
+  background: var(--color-bg);
+  min-height: 80vh;
+}
+
+.card {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--color-paper);
+  border: 1.5px solid var(--color-wood);
+  padding: 2rem 1.5rem;
+  box-shadow: 10px 10px 0 var(--color-highlight);
+  border-radius: 4px;
+}
+
+.title {
+  font-family: var(--font-caveat), cursive;
+  font-size: 2.9rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.orderId {
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 1.8rem;
+}
+
+.orderId span {
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.tracker {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.tracker::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-wood);
+  opacity: 0.2;
+  z-index: 1;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 2;
+  flex: 1;
+}
+
+.circle {
+  width: 32px;
+  height: 32px;
+  background: var(--color-paper);
+  border: 2px solid var(--color-wood);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--color-wood);
+  transition: all 0.3s ease;
+}
+
+.step.active .circle {
+  background: var(--color-wood);
+  color: var(--color-bg);
+  box-shadow: 0 0 10px rgba(116, 79, 70, 0.4);
+}
+
+.statusLabel {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--color-wood);
+  opacity: 0.5;
+}
+
+.step.active .statusLabel {
+  opacity: 1;
+}
+
+.statusMsg {
+  text-align: center;
+  margin-bottom: 2rem;
+  background: var(--color-highlight);
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.tip {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
+.cancelBtn {
+  margin-top: 1rem;
+  background: rgb(185, 67, 67);
+  color: #fff;
+  padding: 0.8rem 1.1rem;
+  border-radius: 4px;
+}
+
+.cancelledBox {
+  text-align: center;
+  margin-bottom: 2rem;
+  background: #f8d7da;
+  color: #842029;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #f1aeb5;
+}
+
+.cancelReason {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(132, 32, 41, 0.22);
+}
+
+.cancelReason p {
+  margin: 0.35rem 0 0;
+}
+
+.thankYou {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1.4rem;
+  background: var(--color-paper);
+  border: 1.5px solid var(--color-wood);
+  border-radius: 4px;
+}
+
+.thankYou h3 {
+  font-family: var(--font-caveat), cursive;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.savedRating {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.details {
+  border-top: 1px dashed var(--color-wood);
+  padding-top: 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.details h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-wood);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.homeBtn {
+  display: block;
+  text-align: center;
+  background: var(--color-wood);
+  color: var(--color-bg);
+  padding: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.homeBtn:hover {
+  transform: translateY(-2px);
+}
+
+.error {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  font-size: 1.1rem;
+  color: #842029;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  font-size: 1.1rem;
+}
+@media (max-width: 480px) {
+  .main {
+    padding: 1.2rem 0.85rem;
+  }
+
+  .card {
+    padding: 1rem 0.9rem;
+  }
+
+  .title {
+    font-size: 2.1rem;
+  }
+
+  .orderId {
+    margin-bottom: 1.35rem;
+  }
+
+  .circle {
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+  }
+
+  .statusLabel {
+    font-size: 0.6rem;
+    letter-spacing: 0;
+  }
+
+  .statusMsg {
+    margin-bottom: 1.35rem;
+    padding: 0.85rem;
+  }
+
+  .details {
+    padding-top: 1rem;
+  }
+
+  .details h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .item {
+    font-size: 0.9rem;
+  }
+
+  .total {
+    font-size: 1rem;
+  }
+}

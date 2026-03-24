@@ -1,0 +1,90 @@
+import { notFound } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import styles from './page.module.css';
+import AddToCartButton from '@/components/AddToCartButton';
+import Link from 'next/link';
+import Image from 'next/image';
+
+import StarRating from '@/components/StarRating';
+import { formatPeso } from '@/lib/currency';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  Cookies: 'Cookies',
+  'Cheese Sticks': 'Cheese Sticks',
+  Lumpia: 'Lumpia',
+  Desserts: 'Cookies',
+  Snacks: 'Cheese Sticks',
+  Meals: 'Lumpia',
+  Drinks: 'Cheese Sticks',
+};
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const item = await prisma.menuItem.findUnique({ where: { id } });
+  if (!item) return { title: 'Not Found | Crave Corner' };
+  return { title: `${item.name} | Crave Corner`, description: item.description };
+}
+
+export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const item = await prisma.menuItem.findUnique({
+    where: { id },
+    include: { _count: { select: { orderItems: true } } },
+  });
+
+  if (!item) notFound();
+
+  const displayCategory = CATEGORY_LABELS[item.category] ?? item.category;
+
+  return (
+    <main className={styles.main}>
+      <div className="container">
+        <Link href="/menu" className={styles.backLink}>← Back to Menu</Link>
+        <div className={styles.productGrid}>
+          <div className={styles.imageSection}>
+            {item.imageUrl ? (
+              <Image
+                src={item.imageUrl}
+                alt={item.name}
+                className={styles.image}
+                width={900}
+                height={600}
+                sizes="(max-width: 768px) 100vw, 60vw"
+                priority
+              />
+            ) : (
+              <div className={styles.placeholder}>{displayCategory}</div>
+            )}
+          </div>
+          <div className={styles.infoSection}>
+            <div className={styles.categoryRow}>
+              <span className={styles.category}>{displayCategory}</span>
+              <span className={styles.sold}>{item._count.orderItems ?? 0} sold</span>
+            </div>
+            <h1 className={styles.title}>{item.name}</h1>
+            <div className={styles.ratingRow}>
+              <StarRating rating={item.rating ?? 0} />
+              <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
+            </div>
+            <div className={styles.buyRow}>
+              <p className={styles.price}>{formatPeso(item.price)}</p>
+              <div className={styles.buyButtonWrap}>
+                <AddToCartButton item={item} />
+              </div>
+            </div>
+            <p className={styles.description}>{item.description}</p>
+            <div className={styles.details}>
+              <h3>Product Details</h3>
+              <p>Handcrafted daily. Contains fresh, organic ingredients sourced from local farms.</p>
+              <ul>
+                <li>Freshly prepared on order</li>
+                <li>No artificial preservatives</li>
+                <li>Sustainable packaging</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}

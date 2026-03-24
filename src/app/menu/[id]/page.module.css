@@ -1,0 +1,176 @@
+.main {
+  padding: 2rem 1rem;
+  background: var(--color-bg);
+  min-height: 80vh;
+}
+
+.backLink {
+  display: inline-flex;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  color: var(--color-wood);
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.imageSection {
+  background: var(--color-paper);
+  border: 1.5px solid var(--color-wood);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.placeholder {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--color-wood);
+  opacity: 0.2;
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  display: inline-block;
+  background: var(--color-highlight);
+  color: var(--color-wood);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  width: fit-content;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.1;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.ratingCount {
+  font-size: 0.95rem;
+  color: var(--color-ink-subtle, rgba(0,0,0,0.6));
+}
+
+.buyRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 1.25rem;
+  justify-content: flex-start;
+}
+
+.price {
+  font-size: 2rem;
+  font-family: var(--font-caveat), cursive;
+  color: var(--color-wood);
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.buyButtonWrap {
+  margin-left: auto;
+  flex: 1 1 50%;
+  max-width: 50%;
+  min-width: 180px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buyButtonWrap :global(button) {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.sold {
+  font-size: 0.95rem;
+  color: var(--color-ink-subtle, rgba(0,0,0,0.6));
+  margin-left: auto;
+}
+
+.details {
+  border-top: 1px solid var(--color-wood);
+  padding-top: 2rem;
+}
+
+.details h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.details ul {
+  list-style: none;
+  padding: 0;
+}
+
+.details li {
+  margin-bottom: 0.6rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.details li::before {
+  content: "❧";
+  position: absolute;
+  left: 0;
+  color: var(--color-wood);
+}
+
+/* --- Tablet & Desktop Overrides --- */
+@media (min-width: 800px) {
+  .main { padding: 4rem 2rem; }
+  .productGrid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .imageSection { position: sticky; top: 2rem; }
+  .placeholder { height: 400px; }
+  .title { font-size: 4rem; }
+  .price { font-size: 2.5rem; }
+  .actions { max-width: 250px; }
+}

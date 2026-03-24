@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.star {
+  font-size: 1.1rem;
+  color: #ccc;
+  line-height: 1;
+  user-select: none;
+}
+
+.active {
+  color: #f1c40f;
+  text-shadow: 0 0 5px rgba(241, 196, 15, 0.3);
+}
+
+.interactive {
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.interactive:hover {
+  transform: scale(1.2);
+}
