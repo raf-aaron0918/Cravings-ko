@@ -24,13 +24,14 @@ export default async function MenuPage() {
       })
     : [];
 
+  type SoldItem = (typeof soldItems)[number];
   const orderedSoldItems = soldIds
-    .map(id => soldItems.find(item => item.id === id))
-    .filter(Boolean)
+    .map((id: Sale['menuItemId']) => soldItems.find((item: SoldItem) => item.id === id))
+    .filter((item): item is SoldItem => Boolean(item))
     .map(item => ({
-      ...item!,
-      soldCount: soldLookup.get(item!.id) ?? 0,
-      isBestSeller: (soldLookup.get(item!.id) ?? 0) > 0,
+      ...item,
+      soldCount: soldLookup.get(item.id) ?? 0,
+      isBestSeller: (soldLookup.get(item.id) ?? 0) > 0,
     }));
 
   const unsoldItems = await prisma.menuItem.findMany({
