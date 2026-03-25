@@ -28,7 +28,7 @@ export default async function MenuPage() {
   const orderedSoldItems = soldIds
     .map((id: Sale['menuItemId']) => soldItems.find((item: SoldItem) => item.id === id))
     .filter((item: SoldItem | undefined): item is SoldItem => Boolean(item))
-    .map(item => ({
+    .map((item: SoldItem) => ({
       ...item,
       soldCount: soldLookup.get(item.id) ?? 0,
       isBestSeller: (soldLookup.get(item.id) ?? 0) > 0,
