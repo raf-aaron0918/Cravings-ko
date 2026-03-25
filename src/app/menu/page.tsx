@@ -27,7 +27,7 @@ export default async function MenuPage() {
   type SoldItem = (typeof soldItems)[number];
   const orderedSoldItems = soldIds
     .map((id: Sale['menuItemId']) => soldItems.find((item: SoldItem) => item.id === id))
-    .filter((item): item is SoldItem => Boolean(item))
+    .filter((item: SoldItem | undefined): item is SoldItem => Boolean(item))
     .map(item => ({
       ...item,
       soldCount: soldLookup.get(item.id) ?? 0,
