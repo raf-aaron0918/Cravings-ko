@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { MenuItem } from '@prisma/client';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 
@@ -11,13 +12,13 @@ async function canFeatureAnotherItem() {
 }
 
 export async function GET() {
-  const items = await prisma.menuItem.findMany({
+  const items = (await prisma.menuItem.findMany({
     orderBy: [
       { isFeatured: 'desc' },
       { category: 'asc' },
       { name: 'asc' },
     ],
-  });
+  })) as MenuItem[];
 
   const reviewedOrders = await prisma.order.findMany({
     where: {
@@ -49,7 +50,7 @@ export async function GET() {
   }
 
   return NextResponse.json(
-    items.map(item => ({
+    items.map((item: MenuItem) => ({
       ...item,
       reviews: reviewMap.get(item.id) ?? [],
     }))
