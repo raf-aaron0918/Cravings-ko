@@ -44,9 +44,10 @@ export default async function MenuPage() {
     ],
   });
 
+  type UnsoldItem = (typeof unsoldItems)[number];
   const items = [
     ...orderedSoldItems,
-    ...unsoldItems.map(item => ({
+    ...unsoldItems.map((item: UnsoldItem) => ({
       ...item,
       soldCount: 0,
       isBestSeller: false,
