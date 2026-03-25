@@ -9,8 +9,13 @@ const lora = Lora({ subsets: ['latin'], variable: '--font-lora' })
 const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat' })
 
 export const metadata: Metadata = {
-  title: 'Crave Corner | Handcrafted Food',
+  title: 'Cravings Ko',
   description: 'A cozy local café offering handcrafted meals and desserts.',
+  icons: {
+    icon: '/uploads/logo-small.png',
+    shortcut: '/uploads/logo-small.png',
+    apple: '/uploads/logo-small.png',
+  },
 }
 
 export default function RootLayout({
