@@ -41,10 +41,11 @@ export default async function HomePage() {
   }) as MenuItem[];
 
   // preserve best seller order
+  type BestId = BestSeller['menuItemId'];
   const orderedBest = bestIds
-    .map(id => bestItems.find(i => i.id === id))
+    .map((id: BestId) => bestItems.find(i => i.id === id))
     .filter((item): item is MenuItem => Boolean(item))
-    .map(item => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0 }));
+    .map((item: MenuItem) => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0 }));
 
   const fillersNeeded = Math.max(0, 3 - orderedBest.length);
   const fillerItems = fillersNeeded
