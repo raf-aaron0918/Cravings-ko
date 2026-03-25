@@ -44,7 +44,7 @@ export default async function HomePage() {
   type BestId = BestSeller['menuItemId'];
   const orderedBest = bestIds
     .map((id: BestId) => bestItems.find(i => i.id === id))
-    .filter((item): item is MenuItem => Boolean(item))
+    .filter((item: MenuItem | undefined): item is MenuItem => Boolean(item))
     .map((item: MenuItem) => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0 }));
 
   const fillersNeeded = Math.max(0, 3 - orderedBest.length);
