@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import sharp from 'sharp';
 
 import { cookies } from 'next/headers';
 
@@ -88,9 +89,21 @@ export async function POST(req: NextRequest) {
     if (file) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const safeBase = file.name.replace(/\s+/g, '-').replace(/\.[^.]+$/, '');
+      const filename = `${Date.now()}-${safeBase}.webp`;
       const uploadPath = path.join(process.cwd(), 'public', 'uploads', filename);
-      await writeFile(uploadPath, buffer);
+
+      if (file.type.startsWith('image/')) {
+        const optimized = await sharp(buffer)
+          .rotate()
+          .resize({ width: 1200, withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toBuffer();
+        await writeFile(uploadPath, optimized);
+      } else {
+        await writeFile(uploadPath, buffer);
+      }
+
       imageUrl = `/uploads/${filename}`;
     }
 
