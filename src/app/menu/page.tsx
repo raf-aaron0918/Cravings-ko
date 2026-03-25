@@ -16,7 +16,7 @@ export default async function MenuPage() {
 
   type Sale = (typeof sales)[number];
   const soldLookup = new Map(sales.map((item: Sale) => [item.menuItemId, item._sum.quantity ?? 0]));
-  const soldIds = sales.map(item => item.menuItemId);
+  const soldIds = sales.map((item: Sale) => item.menuItemId);
 
   const soldItems = soldIds.length
     ? await prisma.menuItem.findMany({
