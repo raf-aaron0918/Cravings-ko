@@ -50,7 +50,7 @@ export default async function HomePage() {
   const fillersNeeded = Math.max(0, 3 - orderedBest.length);
   const fillerItems = fillersNeeded
     ? (await prisma.menuItem.findMany({
-        where: orderedBest.length ? { NOT: { id: { in: orderedBest.map(i => i.id) } } } : undefined,
+        where: orderedBest.length ? { NOT: { id: { in: orderedBest.map((i: MenuItem) => i.id) } } } : undefined,
         orderBy: [
           { updatedAt: 'desc' },
           { name: 'asc' },
