@@ -5,7 +5,6 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    // @ts-expect-error - Prisma 7 specific option
     accelerateUrl: process.env.DATABASE_URL,
   });
 
