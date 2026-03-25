@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import type { MenuItem } from '@prisma/client';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 
@@ -10,6 +9,8 @@ async function canFeatureAnotherItem() {
   const featuredCount = await prisma.menuItem.count({ where: { isFeatured: true } });
   return featuredCount < 2;
 }
+
+type MenuItem = Awaited<ReturnType<typeof prisma.menuItem.findMany>>[number];
 
 export async function GET() {
   const items = (await prisma.menuItem.findMany({
