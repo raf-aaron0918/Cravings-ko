@@ -14,7 +14,8 @@ export default async function MenuPage() {
     orderBy: { _sum: { quantity: 'desc' } },
   });
 
-  const soldLookup = new Map(sales.map(item => [item.menuItemId, item._sum.quantity ?? 0]));
+  type Sale = (typeof sales)[number];
+  const soldLookup = new Map(sales.map((item: Sale) => [item.menuItemId, item._sum.quantity ?? 0]));
   const soldIds = sales.map(item => item.menuItemId);
 
   const soldItems = soldIds.length
