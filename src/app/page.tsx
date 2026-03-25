@@ -30,8 +30,11 @@ export default async function HomePage() {
     take: 3,
   });
 
-  const bestIds = bestSellers.map(item => item.menuItemId);
-  const soldLookup = new Map(bestSellers.map(item => [item.menuItemId, item._sum.quantity ?? 0]));
+  type BestSeller = (typeof bestSellers)[number];
+  const bestIds = bestSellers.map((item: BestSeller) => item.menuItemId);
+  const soldLookup = new Map<string, number>(
+    bestSellers.map((item: BestSeller) => [item.menuItemId, item._sum.quantity ?? 0])
+  );
 
   const bestItems = await prisma.menuItem.findMany({
     where: { id: { in: bestIds } },
