@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
 }
 
-export async function DELETE() {
+export async function DELETE() { 
   const res = NextResponse.json({ success: true });
   res.cookies.delete('admin_auth');
   return res;

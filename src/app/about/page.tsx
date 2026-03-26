@@ -9,28 +9,16 @@ export const metadata = {
 
 const team = [
   {
-    name: 'Maria Santos',
-    role: 'Founder',
-    blurb: 'Keeps the recipes rooted in Filipino comfort food and family tradition.',
-    photo: null,
+    name: 'CIELO MAE S. COTANAS',
   },
   {
-    name: 'Paolo Reyes',
-    role: 'Kitchen Lead',
-    blurb: 'Handles daily prep, quality checks, and the flavors that keep regulars coming back.',
-    photo: null,
+    name: 'JHON WILLIAM D. DAYRIT',
   },
   {
-    name: 'Jasmine Cruz',
-    role: 'Customer Care',
-    blurb: 'Manages orders, messages, and custom requests with fast and friendly service.',
-    photo: null,
+    name: 'GENEVIE S. DEL ROSARIO',
   },
   {
-    name: 'Ethan Garcia',
-    role: 'Operations',
-    blurb: 'Coordinates deliveries, stocking, and smooth day-to-day workflow behind the scenes.',
-    photo: null,
+    name: 'CLAUDINE KHRYSS M. BUZA',
   },
 ];
 
@@ -51,32 +39,58 @@ export default function AboutPage() {
       <section className={styles.storySection}>
         <div className={styles.storyGrid}>
           <article className={styles.storyCard}>
-            <span className={styles.kicker}>How It Started</span>
-            <h2>From family recipes to a shared table.</h2>
+            <h2>How It Started</h2>
+            <p>    </p>
             <p>
-              Crave Corner was built from the kind of dishes that stay with you: merienda
-              favorites, homemade desserts, and recipes passed around in kitchens full of
-              conversation. The goal was simple: serve food that feels honest and familiar.
+              Cravings Ko started as a simple idea: to make affordable yet high-quality snacks
+              easily accessible to everyone, especially students and busy individuals. We noticed
+              that many snack options were either expensive, limited in variety, or lacked
+              consistency in quality. From this gap, Cravings Ko was born, offering a mix of sweet
+              and savory treats in one platform. What began as a small initiative has grown into a
+              brand that values customer satisfaction, convenience, and reliability. By combining
+              homemade flavors with a modern online ordering system, we made it easier for
+              customers to enjoy their favorite snacks anytime.
             </p>
           </article>
 
           <article className={styles.storyCard}>
-            <span className={styles.kicker}>What We Value</span>
-            <h2>Fresh, handcrafted, and worth the extra effort.</h2>
+           
+            <h2>What We Believe</h2>
+              
             <p>
-              We believe good food should feel made, not manufactured. That means careful
-              prep, balanced flavor, and no shortcuts where quality matters. A little
-              imperfection is welcome because that is often where the character lives.
+              At Cravings Ko, we stand by these core values: 
+              <br></br>
+              <b>Quality You Can Trust</b> – We ensure
+              that every product is made with care, delivering consistent taste and freshness.
+              <br></br>
+              <b>Convenience Matters</b> – Our frozen cheese sticks and lumpia are designed for easy
+              storage and preparation, turning perfectly crispy when fried, so you can enjoy
+              fresh snacks anytime. 
+              <br></br>
+              <b>Affordability for Everyone</b> – Good food doesn’t have to be
+              expensive. We offer budget-friendly options without compromising quality. 
+              <br></br>
+              <b>Made to Match Every Cravings</b> – We believe that everyone has different cravings, and we are
+              here to satisfy each one with our variety of snacks. 
+              <br></br>
+              <b>Customer First</b> – Your
+              satisfaction is our priority, and we strive to provide a smooth and enjoyable
+              ordering experience.
             </p>
           </article>
 
           <article className={`${styles.storyCard} ${styles.storyCardWide}`}>
-            <span className={styles.kicker}>Why We Do It</span>
-            <h2>Comfort food should still feel special.</h2>
+            
+            <h2>Our Products</h2>
             <p>
-              Whether someone is ordering for a quiet craving, a family gathering, or a
-              celebration, we want every box and every plate to carry the same warmth as a
-              homemade meal. That is the standard we work toward every day.
+             Cravings Ko offers a delicious selection of snacks that are perfect for any time of the day:
+            <br></br>
+            <b>Cheese Sticks</b> – Frozen and ready-to-cook, coated for that perfect crispy bite with flavorful powder options.
+            <br></br>
+            <b>Lumpia</b> – Packed with savory filling, delivered frozen for convenience, and made to turn golden and crispy when fried.
+            <br></br>
+            <b>Cookies</b> – Freshly baked and available in different flavors, perfect for satisfying your sweet cravings.
+
             </p>
             <Link href="/menu" className={styles.cta}>Explore the Menu</Link>
           </article>
@@ -92,17 +106,8 @@ export default function AboutPage() {
         <div className={styles.teamGrid}>
           {team.map((member) => (
             <article key={member.name} className={styles.memberCard}>
-              <div className={styles.memberPhoto}>
-                {member.photo ? (
-                  <img src={member.photo} alt={member.name} className={styles.memberPhotoImg} />
-                ) : (
-                  <span className={styles.memberPhotoPlaceholder}>Photo</span>
-                )}
-              </div>
               <div className={styles.memberBody}>
-                <span className={styles.memberRole}>{member.role}</span>
                 <h3>{member.name}</h3>
-                <p>{member.blurb}</p>
               </div>
             </article>
           ))}

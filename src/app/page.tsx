@@ -75,7 +75,7 @@ export default async function HomePage() {
               priority
             />
           </div>
-          <p className={styles.subtitle}>Made to Match your Cravings</p>
+          <p className={styles.subtitle}>Made to Match every Cravings</p>
         </div>
       </header>
 
@@ -132,9 +132,14 @@ export default async function HomePage() {
         <div className="container">
           <h2 className={styles.storyTitle}>Our Story</h2>
           <p className={styles.storyText}>
-            Founded on the principle that the best recipes are passed down through
-            generations, Crave Corner brings you old-school flavors with zero shortcuts.
-            Every dish is handcrafted from fresh ingredients and a lot of heart.
+            Cravings Ko was created with one simple goal in mind—to satisfy every
+            craving with comfort, quality, and convenience. Inspired by the love for
+            Filipino snacks and sweets, the brand brings together classic favorites
+            like cheese sticks, lumpia, and cookies in one place. Guided by our
+            tagline, “Made to Match Every Cravings”, we aim to offer a variety of
+            flavors that suit every mood, whether you’re craving something crispy,
+            sweet, or savory. At Cravings Ko, we believe that food is more than just
+            a quick bite, it’s an experience that brings joy, comfort, and connection.
           </p>
           <Link href="/about" className={styles.storyLink}>Read more about us →</Link>
         </div>

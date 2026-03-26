@@ -27,7 +27,11 @@ export default function ContactPage() {
 
           <div className={styles.infoBlock}>
             <span className={styles.label}>Call Us</span>
-            <h3>(+63) 912-345-6789</h3>
+            <h3>
+              <a href="tel:+639656152690" className={styles.link}>
+                (+63) 965-615-2690
+              </a>
+            </h3>
             <p>Available for orders, pickup questions, and delivery updates.</p>
           </div>
 
@@ -39,7 +43,11 @@ export default function ContactPage() {
 
           <div className={styles.infoBlock}>
             <span className={styles.label}>Email</span>
-            <h3>hello@cravecorner.com</h3>
+            <h3>
+              <a href="mailto:cravingsko18@gmail.com" className={styles.link}>
+                cravingsko18@gmail.com
+              </a>
+            </h3>
             <p>Send us inquiries for bulk orders, events, and menu requests.</p>
           </div>
 
@@ -47,24 +55,6 @@ export default function ContactPage() {
             <span className={styles.label}>Socials</span>
             <h3>Follow Crave Corner</h3>
             <div className={styles.socialList}>
-              <a
-                href="tel:+639123456789"
-                className={styles.socialLink}
-              >
-                <span className={styles.socialIcon}>
-                  <Image src="/uploads/telephone.png" alt="Telephone" width={20} height={20} />
-                </span>
-                <span>Call Us</span>
-              </a>
-              <a
-                href="mailto:hello@cravecorner.com"
-                className={styles.socialLink}
-              >
-                <span className={styles.socialIcon}>
-                  <Image src="/uploads/gmail.png" alt="Gmail" width={20} height={20} />
-                </span>
-                <span>Gmail</span>
-              </a>
               <a
                 href="https://www.facebook.com/people/Cravings-Ko/61579546756036/"
                 target="_blank"

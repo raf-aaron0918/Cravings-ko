@@ -90,6 +90,7 @@
 
 .storyCard p {
   margin: 0;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: rgba(45, 28, 17, 0.82);
 }
@@ -117,20 +118,25 @@
 
 .teamGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
   padding-bottom: 3rem;
+  justify-items: center;
 }
 
 .memberCard {
   display: flex;
-  gap: 0.95rem;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 250, 245, 0.94);
   border: 1px solid rgba(108, 63, 42, 0.14);
   border-radius: 24px;
-  padding: 1rem;
+  padding: 1.1rem;
   box-shadow: 0 16px 32px rgba(67, 33, 16, 0.08);
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 3.4rem;
 }
 
 .memberPhoto {
@@ -166,6 +172,8 @@
 
 .memberBody {
   min-width: 0;
+  text-align: center;
+  padding-inline: 0.6rem;
 }
 
 .memberRole {
@@ -179,8 +187,11 @@
 }
 
 .memberBody h3 {
-  margin: 0.45rem 0 0.3rem;
-  font-size: 1.18rem;
+  margin: 0;
+  font-size: clamp(0.7rem, 2.3vw, 0.9rem);
+  line-height: 1.2;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .memberBody p {

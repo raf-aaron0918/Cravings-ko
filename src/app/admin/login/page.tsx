@@ -19,7 +19,7 @@ export default function AdminLoginPage() {
     if (res.ok) {
       router.push('/admin/dashboard');
     } else {
-      setError('Invalid credentials. Default: admin / vintage2024');
+      setError('Invalid credentials.');
     }
   };
 

@@ -7,6 +7,8 @@ export const metadata = {
   description: 'Browse our handcrafted menu of cookies, cheese sticks, and lumpia.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function MenuPage() {
   const sales = await prisma.orderItem.groupBy({
     by: ['menuItemId'],
