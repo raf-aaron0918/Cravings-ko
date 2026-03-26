@@ -570,3 +570,12 @@ Creating turbopack project { dir: 'C:\\Users\\Coding\\Cravings-ko', testMode: tr
  GET /api/orders/cmn748tr10000eah03tuwahgv 200 in 147ms (compile: 17ms, render: 130ms)
  GET / 200 in 275ms (compile: 5ms, render: 270ms)
 ✓ Compiled in 19ms
+ GET /contact 200 in 302ms (compile: 215ms, render: 87ms)
+ GET /menu 200 in 1365ms (compile: 142ms, render: 1223ms)
+ GET /uploads/1774456361277-1000015717.webp 404 in 599ms (compile: 362ms, render: 237ms)
+ GET /uploads/1774509964248-1000015717.webp 404 in 609ms (compile: 410ms, render: 198ms)
+✓ Compiled in 266ms
+ GET /menu 200 in 691ms (compile: 11ms, render: 680ms)
+ GET /contact 200 in 213ms (compile: 135ms, render: 77ms)
+ GET /contact 200 in 28ms (compile: 3ms, render: 25ms)
+ GET /menu 200 in 261ms (compile: 163ms, render: 98ms)
