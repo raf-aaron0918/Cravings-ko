@@ -21,8 +21,8 @@ export default function ContactPage() {
         <div className={styles.info}>
           <div className={styles.infoBlock}>
             <span className={styles.label}>Visit Us</span>
-            <h3>Heritage District Shop</h3>
-            <p>123 Old Bakery Lane, Heritage District</p>
+            <h3>Cravings ko</h3>
+            <p>Blk 12 Lot 64 Ph2 Spring Town Bucal, Tanza Cavite </p>
           </div>
 
           <div className={styles.infoBlock}>

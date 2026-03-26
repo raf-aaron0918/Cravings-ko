@@ -51,6 +51,7 @@ export default function AdminMenuPage() {
   const [openFeedbackId, setOpenFeedbackId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -136,6 +137,7 @@ export default function AdminMenuPage() {
     });
     setFile(null);
     setEditId(item.id);
+    setShowForm(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -146,7 +148,6 @@ export default function AdminMenuPage() {
     if (res.ok) setItems(await res.json());
   };
 
-  const featuredCount = items.filter(item => item.isFeatured).length;
 
   return (
     <main className={styles.main}>
@@ -157,38 +158,75 @@ export default function AdminMenuPage() {
 
       {message && <p className={styles.message}>{message}</p>}
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <p className={styles.specialtyHint}>Home specialties selected: {featuredCount}/2</p>
-        <div className={styles.formGrid}>
-          <label>Item Name
-            <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
+      <div className={styles.formHeader}>
+        <button
+          type="button"
+          className={styles.toggleBtn}
+          onClick={() => setShowForm((prev) => !prev)}
+        >
+          {showForm ? 'Hide Add Form' : 'Add Item'}
+        </button>
+      </div>
+
+      {showForm && !editId && (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <h2>Add Item</h2>
+          <div className={styles.formGrid}>
+            <label>Item Name
+              <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
+            </label>
+            <label>Category
+              <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>
+                {CATEGORIES.map(category => <option key={category}>{category}</option>)}
+              </select>
+            </label>
+            <label>Price (PHP)
+              <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} required />
+            </label>
+            <label>Item Image (Upload)
+              <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
+            </label>
+          </div>
+          <label style={{ marginTop: '1rem' }}>Description
+            <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
           </label>
-          <label>Category
-            <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>
-              {CATEGORIES.map(category => <option key={category}>{category}</option>)}
-            </select>
+          <div className={styles.formActions}>
+            <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Add Item'}</button>
+          </div>
+        </form>
+      )}
+
+      {editId && (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <h2>Edit Item</h2>
+          <div className={styles.formGrid}>
+            <label>Item Name
+              <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
+            </label>
+            <label>Category
+              <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>
+                {CATEGORIES.map(category => <option key={category}>{category}</option>)}
+              </select>
+            </label>
+            <label>Price (PHP)
+              <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} required />
+            </label>
+            <label>Item Image (Upload)
+              <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
+            </label>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={form.outOfStock}
+                onChange={e => setForm(p => ({ ...p, outOfStock: e.target.checked }))} />
+              <span>Out of Stock</span>
+            </label>
+          </div>
+          <label style={{ marginTop: '1rem' }}>Description
+            <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
           </label>
-          <label>Price (PHP)
-            <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} required />
-          </label>
-          <label>Item Image (Upload)
-            <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
-          </label>
-          <label className={styles.checkboxLabel}>
-            <input
-              type="checkbox"
-              checked={form.outOfStock}
-              onChange={e => setForm(p => ({ ...p, outOfStock: e.target.checked }))}
-            />
-            <span>Out of Stock</span>
-          </label>
-        </div>
-        <label style={{ marginTop: '1rem' }}>Description
-          <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
-        </label>
-        <div className={styles.formActions}>
-          <button type="submit" disabled={loading}>{loading ? 'Saving...' : editId ? 'Update Item' : 'Add Item'}</button>
-          {editId && (
+          <div className={styles.formActions}>
+            <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Update Item'}</button>
             <button
               type="button"
               onClick={() => {
@@ -200,9 +238,9 @@ export default function AdminMenuPage() {
             >
               Cancel
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      )}
 
       <h2 className={styles.tableTitle}>All Menu Items ({items.length})</h2>
       <div className={styles.tableWrapper}>
@@ -212,7 +250,6 @@ export default function AdminMenuPage() {
               <th>Name</th>
               <th>Category</th>
               <th>Price</th>
-              <th>Specialty</th>
               <th>Stock</th>
               <th>Rating</th>
               <th>Feedback</th>
@@ -225,11 +262,6 @@ export default function AdminMenuPage() {
                 <td data-label="Name">{item.name}</td>
                 <td data-label="Category"><span className={styles.catTag}>{item.category}</span></td>
                 <td data-label="Price">{formatPeso(item.price)}</td>
-                <td data-label="Specialty">
-                  <span className={`${styles.specialtyTag} ${item.isFeatured ? styles.specialtyActive : styles.specialtyInactive}`}>
-                    {item.isFeatured ? 'Shown' : 'Hidden'}
-                  </span>
-                </td>
                 <td data-label="Stock">
                   <span className={`${styles.stockTag} ${item.outOfStock ? styles.stockOut : styles.stockIn}`}>
                     {item.outOfStock ? 'Out of Stock' : 'Available'}
@@ -273,7 +305,7 @@ export default function AdminMenuPage() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
+                <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
                   No menu items yet. Add some above!
                 </td>
               </tr>
