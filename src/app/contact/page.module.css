@@ -67,8 +67,7 @@
 
 .infoBlockWide {
   background:
-    linear-gradient(135deg, rgba(108, 63, 42, 0.08), rgba(255, 236, 213, 0.7)),
-    rgba(255, 250, 245, 0.96);
+  rgba(255, 250, 245, 0.96);
 }
 
 .label {
@@ -102,7 +101,7 @@
 .infoBlock p {
   margin: 0;
   line-height: 1.65;
-  color: rgba(45, 28, 17, 0.8);
+  color: rgba(122, 81, 53, 0.8);
 }
 
 .socialList {

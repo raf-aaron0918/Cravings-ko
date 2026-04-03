@@ -648,3 +648,6 @@ Creating turbopack project { dir: 'C:\\Users\\Coding\\Cravings-ko', testMode: tr
  GET /contact 200 in 194ms (compile: 155ms, render: 38ms)
  GET /contact 200 in 279ms (compile: 214ms, render: 65ms)
  GET /contact 200 in 181ms (compile: 136ms, render: 45ms)
+ GET / 200 in 724ms (compile: 5ms, render: 719ms)
+ GET /menu 200 in 790ms (compile: 22ms, render: 768ms)
+ GET /uploads/1774511069457-1000015717.webp 404 in 143ms (compile: 37ms, render: 106ms)

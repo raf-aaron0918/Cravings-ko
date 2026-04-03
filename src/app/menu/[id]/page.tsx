@@ -27,6 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const bestSellers = await prisma.orderItem.groupBy({
+    by: ['menuItemId'],
+    _sum: { quantity: true },
+    orderBy: { _sum: { quantity: 'desc' } },
+    take: 3,
+  });
+  const bestSellerIds = new Set(bestSellers.map(entry => entry.menuItemId));
+
   const item = await prisma.menuItem.findUnique({
     where: { id },
     include: { _count: { select: { orderItems: true } } },
@@ -35,6 +43,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   if (!item) notFound();
 
   const displayCategory = CATEGORY_LABELS[item.category] ?? item.category;
+  const isBestSeller = bestSellerIds.has(item.id);
 
   return (
     <main className={styles.main}>
@@ -59,6 +68,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           <div className={styles.infoSection}>
             <div className={styles.categoryRow}>
               <span className={styles.category}>{displayCategory}</span>
+              {isBestSeller && <span className={styles.badge}>Best Seller</span>}
+              {item.outOfStock && <span className={`${styles.badge} ${styles.stockBadge}`}>Out of Stock</span>}
               <span className={styles.sold}>{item._count.orderItems ?? 0} sold</span>
             </div>
             <h1 className={styles.title}>{item.name}</h1>

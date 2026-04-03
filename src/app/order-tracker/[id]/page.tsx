@@ -22,6 +22,9 @@ type OrderWithItems = {
   customerContact: string;
   totalAmount: number;
   status: string;
+  paymentMethod?: string | null;
+  paymentStatus?: string | null;
+  paymentReference?: string | null;
   rating: number | null;
   feedback: string | null;
   cancelReason: string | null;
@@ -61,10 +64,17 @@ export default function OrderTrackerPage() {
   if (loading) return <div className={styles.loading}>Tracking your order...</div>;
   if (!order) return <div className={styles.error}>Order not found.</div>;
 
-  const currentIndex = STATUSES.indexOf(order.status);
+  const statusForSteps = (order.status === 'COD' || order.status === 'PAID') ? 'PENDING' : order.status;
+  const currentIndex = STATUSES.indexOf(statusForSteps);
   const isCompleted = order.status === 'COMPLETED';
-  const isCancelled = order.status === 'CANCELLED';
-  const canCancel = order.status === 'PENDING';
+  const isCancelled = order.status === 'CANCELLED' || order.status === 'EXPIRED';
+  const canCancel = order.status === 'PENDING' && order.paymentStatus !== 'PAID';
+
+  const paymentMethodLabel = (() => {
+    if (order.paymentMethod === 'COD') return 'Cash on Delivery';
+    if (order.paymentMethod === 'QRPH') return 'QR Ph';
+    return 'Unknown';
+  })();
 
   const handleCancelOrder = async () => {
     setCancelling(true);
@@ -103,8 +113,12 @@ export default function OrderTrackerPage() {
 
           {isCancelled ? (
             <div className={styles.cancelledBox}>
-              <h3>Order Cancelled</h3>
-              <p>This order has been cancelled and will no longer be prepared.</p>
+              <h3>{order.status === 'EXPIRED' ? 'Payment Expired' : 'Order Cancelled'}</h3>
+              <p>
+                {order.status === 'EXPIRED'
+                  ? 'This order expired because the payment was not completed within 30 minutes.'
+                  : 'This order has been cancelled and will no longer be prepared.'}
+              </p>
               {order.cancelReason && (
                 <div className={styles.cancelReason}>
                   <strong>Reason:</strong>
@@ -114,7 +128,6 @@ export default function OrderTrackerPage() {
             </div>
           ) : !isCompleted ? (
             <div className={styles.statusMsg}>
-              <p>Current Status: <strong>{order.status}</strong></p>
               <p className={styles.tip}>We&apos;ll keep you updated as we cook!</p>
               {canCancel && (
                 <button type="button" className={styles.cancelBtn} onClick={handleCancelOrder} disabled={cancelling}>
@@ -153,6 +166,16 @@ export default function OrderTrackerPage() {
               <span>Total Amount</span>
               <span>{formatPeso(order.totalAmount)}</span>
             </div>
+            <div className={styles.total}>
+              <span>Payment Method</span>
+              <span>{paymentMethodLabel}</span>
+            </div>
+            {order.paymentStatus === 'PAID' && order.paymentReference && (
+              <div className={styles.total}>
+                <span>Payment Reference</span>
+                <span>{order.paymentReference}</span>
+              </div>
+            )}
           </div>
 
           <Link href="/" className={styles.homeBtn}>Back to Home</Link>

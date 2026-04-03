@@ -98,6 +98,14 @@
   border-top: 2px solid var(--color-wood);
 }
 
+.feeRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.9rem;
+  font-weight: bold;
+  color: rgba(45, 28, 17, 0.85);
+}
+
 .totalAmount {
   font-family: var(--font-caveat), cursive;
   font-size: 2.5rem;
@@ -125,6 +133,78 @@
   font-family: var(--font-lora), serif;
   font-size: 1rem;
   border-radius: 2px;
+}
+
+.paymentSection {
+  border: 1.5px dashed var(--color-wood);
+  padding: 1.2rem;
+  border-radius: 4px;
+  background: #fffdf9;
+}
+
+.paymentSection h2 {
+  margin: 0 0 0.9rem;
+}
+
+.paymentOptions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.paymentOption {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  cursor: pointer;
+}
+
+.paymentOption input {
+  margin-top: 0.3rem;
+  accent-color: var(--color-wood);
+}
+
+.paymentCard {
+  border: 1.5px solid var(--color-wood);
+  background: var(--color-paper);
+  padding: 0.85rem 1rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.paymentCard span {
+  color: rgba(45, 28, 17, 0.75);
+}
+
+.paymentDetails {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 4px;
+  background: var(--color-highlight);
+  border: 1px dashed var(--color-wood);
+  display: grid;
+  gap: 0.7rem;
+}
+
+.paymentDetailsInline {
+  margin-left: 2.2rem;
+}
+
+.paymentRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: bold;
+}
+
+.paymentHint {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(45, 28, 17, 0.8);
 }
 
 .orderBtn {

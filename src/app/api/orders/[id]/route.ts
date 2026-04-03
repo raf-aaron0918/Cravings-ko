@@ -11,6 +11,17 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
       include: { items: { include: { menuItem: true } } },
     });
     if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    if (order.status === 'PENDING' && order.paymentMethod === 'QRPH' && order.paymentStatus === 'UNPAID') {
+      const expirationThreshold = Date.now() - 30 * 60 * 1000;
+      if (order.createdAt.getTime() < expirationThreshold) {
+        const updated = await prisma.order.update({
+          where: { id },
+          data: { status: 'EXPIRED' },
+          include: { items: { include: { menuItem: true } } },
+        });
+        return NextResponse.json(updated);
+      }
+    }
     return NextResponse.json(order);
   } catch (error) {
     console.error(error);
@@ -40,7 +51,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       const isAdmin = auth?.value === 'true';
 
       if (!isAdmin) {
-        if (currentOrder.status !== 'PENDING') {
+        if (currentOrder.status !== 'PENDING' && currentOrder.status !== 'COD') {
           return NextResponse.json({ error: 'Only pending orders can be cancelled.' }, { status: 400 });
         }
       } else if (currentOrder.status === 'COMPLETED' || currentOrder.status === 'CANCELLED') {

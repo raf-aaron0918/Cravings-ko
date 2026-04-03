@@ -65,8 +65,7 @@
 
 .storyCardWide {
   background:
-    linear-gradient(135deg, rgba(108, 63, 42, 0.08), rgba(255, 236, 213, 0.72)),
-    rgba(255, 250, 245, 0.96);
+  rgba(255, 250, 245, 0.96);
 }
 
 .kicker {

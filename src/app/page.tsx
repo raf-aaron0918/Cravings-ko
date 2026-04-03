@@ -19,6 +19,7 @@ type MenuItem = {
   reviewCount?: number;
   soldCount?: number;
   outOfStock?: boolean;
+  isBestSeller?: boolean;
 };
 
 export default async function HomePage() {
@@ -45,7 +46,7 @@ export default async function HomePage() {
   const orderedBest = bestIds
     .map((id: BestId) => bestItems.find(i => i.id === id))
     .filter((item: MenuItem | undefined): item is MenuItem => Boolean(item))
-    .map((item: MenuItem) => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0 }));
+    .map((item: MenuItem) => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0, isBestSeller: true }));
 
   const fillersNeeded = Math.max(0, 3 - orderedBest.length);
   const fillerItems = fillersNeeded
@@ -59,7 +60,10 @@ export default async function HomePage() {
       })) as MenuItem[]
     : [];
 
-  const displayItems = [...orderedBest, ...fillerItems.map(item => ({ ...item, soldCount: 0 }))];
+  const displayItems = [
+    ...orderedBest,
+    ...fillerItems.map(item => ({ ...item, soldCount: 0, isBestSeller: false })),
+  ];
 
   return (
     <main className={styles.main}>
@@ -105,9 +109,12 @@ export default async function HomePage() {
                   </div>
                   <p className={styles.desc}>{item.description}</p>
                   <div className={styles.metaRow}>
-                    <span className={`${styles.metaBadge} ${item.outOfStock ? styles.stockBadge : ''}`}>
-                      {item.outOfStock ? 'Out of Stock' : 'Best Seller'}
-                    </span>
+                    {item.isBestSeller && (
+                      <span className={styles.metaBadge}>Best Seller</span>
+                    )}
+                    {item.outOfStock && (
+                      <span className={`${styles.metaBadge} ${styles.stockBadge}`}>Out of Stock</span>
+                    )}
                     <span className={styles.metaText}>{item.soldCount ?? 0} sold</span>
                   </div>
                   <div className={styles.priceRow}>

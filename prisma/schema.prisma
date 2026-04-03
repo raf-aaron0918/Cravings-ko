@@ -28,6 +28,10 @@ model Order {
   customerAddress String
   customerContact String
   totalAmount     Float
+  paymentMethod   String?     // COD, QRPH
+  paymentStatus   String?     // UNPAID, PAID
+  paidAt          DateTime?
+  paymentReference String?
   status          String      @default("PENDING") // PENDING, PREPARING, READY, COMPLETED
   rating          Int?        // 1-5 stars
   feedback        String?

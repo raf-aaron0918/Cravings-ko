@@ -20,6 +20,8 @@ type Order = {
   customerContact: string;
   totalAmount: number;
   status: string;
+  paymentMethod?: string | null;
+  paymentStatus?: string | null;
   rating: number | null;
   feedback: string | null;
   cancelReason: string | null;
@@ -109,8 +111,8 @@ export default function AdminDashboard() {
 
   if (loading) return <div className={styles.loading}>Loading Dashboard...</div>;
 
-  const pendingOrders = orders.filter(o => o.status !== 'COMPLETED' && o.status !== 'CANCELLED');
-  const completedOrders = orders.filter(o => o.status === 'COMPLETED' || o.status === 'CANCELLED');
+  const pendingOrders = orders.filter(o => o.status !== 'COMPLETED' && o.status !== 'CANCELLED' && o.status !== 'EXPIRED');
+  const completedOrders = orders.filter(o => o.status === 'COMPLETED' || o.status === 'CANCELLED' || o.status === 'EXPIRED');
 
   const rangeStart = (() => {
     const now = new Date();
@@ -266,7 +268,30 @@ export default function AdminDashboard() {
 import StarRating from '@/components/StarRating';
 
 function OrderCard({ order, onStatusChange, onCancel }: { order: Order, onStatusChange: (id: string, s: string) => void, onCancel: (order: Order) => void }) {
-  const isCompleted = order.status === 'COMPLETED' || order.status === 'CANCELLED';
+  const isCompleted = order.status === 'COMPLETED' || order.status === 'CANCELLED' || order.status === 'EXPIRED';
+  const paymentMethod = order.paymentMethod
+    ?? (order.status === 'COD'
+      ? 'COD'
+      : order.status === 'PAID' || order.status === 'COMPLETED'
+        ? 'QRPH'
+        : null);
+  const paymentStatus = order.paymentStatus
+    ?? (paymentMethod === 'QRPH'
+      ? order.status === 'PENDING'
+        ? 'UNPAID'
+        : order.status === 'PAID' || order.status === 'COMPLETED'
+          ? 'PAID'
+          : null
+      : null);
+  const isPaymentLocked = paymentMethod === 'QRPH' && paymentStatus === 'UNPAID';
+  const isPaidQr = paymentMethod === 'QRPH' && paymentStatus === 'PAID';
+  const isUnpaidQr = paymentMethod === 'QRPH' && paymentStatus === 'UNPAID';
+  const isCod = paymentMethod === 'COD';
+  const statusLabel = isUnpaidQr
+    ? 'UNPAID (QR)'
+    : order.status === 'EXPIRED' && paymentMethod === 'QRPH'
+      ? 'EXPIRED (QR)'
+      : order.status;
 
   return (
     <div className={`${styles.orderCard} handcrafted-border`}>
@@ -275,21 +300,36 @@ function OrderCard({ order, onStatusChange, onCancel }: { order: Order, onStatus
           <h3>Order #{order.id.slice(-6)}</h3>
           <p className={styles.date}>{new Date(order.createdAt).toLocaleString()}</p>
         </div>
-        <div className={styles.statusControl}>
+          <div className={styles.statusControl}>
           <label>Status:</label>
-          {isCompleted ? (
-            <span className={styles.statusPill}>{order.status}</span>
-          ) : (
-            <select
-              value={order.status}
-              onChange={(e) => onStatusChange(order.id, e.target.value)}
-              className={styles.statusSelect}
-            >
-              {STATUSES.filter(s => s !== 'COMPLETED').concat('COMPLETED').map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
-          )}
+          <div className={styles.statusRow}>
+            {isPaidQr && <span className={styles.paymentBadge}>Paid (QR)</span>}
+            {isCod && <span className={`${styles.paymentBadge} ${styles.codBadge}`}>COD</span>}
+            {isUnpaidQr && <span className={`${styles.paymentBadge} ${styles.unpaidBadge}`}>Unpaid (QR)</span>}
+            {isCompleted || isPaymentLocked ? (
+              <span
+                className={`${styles.statusPill} ${
+                  order.status === 'EXPIRED' || order.status === 'CANCELLED'
+                    ? styles.statusPillExpired
+                    : order.status === 'COMPLETED'
+                      ? styles.statusPillCompleted
+                      : ''
+                }`}
+              >
+                {statusLabel}
+              </span>
+            ) : (
+              <select
+                value={order.status}
+                onChange={(e) => onStatusChange(order.id, e.target.value)}
+                className={styles.statusSelect}
+              >
+                {STATUSES.filter(s => s !== 'COMPLETED').concat('COMPLETED').map(s => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            )}
+          </div>
         </div>
       </div>
 

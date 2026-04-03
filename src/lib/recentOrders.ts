@@ -7,6 +7,8 @@ export type RecentOrderEntry = {
 
 const STORAGE_KEY = 'recent_orders';
 const MAX_RECENT_ORDERS = 5;
+const EXPIRATION_DAYS = 7;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export function getRecentOrders(): RecentOrderEntry[] {
   if (typeof window === 'undefined') return [];
@@ -15,7 +17,16 @@ export function getRecentOrders(): RecentOrderEntry[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as RecentOrderEntry[];
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    const cutoff = Date.now() - (EXPIRATION_DAYS * MS_PER_DAY);
+    const filtered = parsed.filter(entry => {
+      const savedAt = Date.parse(entry.savedAt);
+      return Number.isFinite(savedAt) && savedAt >= cutoff;
+    });
+    if (filtered.length !== parsed.length) {
+      saveRecentOrders(filtered);
+    }
+    return filtered;
   } catch {
     return [];
   }

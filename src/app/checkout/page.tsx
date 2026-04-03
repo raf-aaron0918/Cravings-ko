@@ -10,26 +10,79 @@ export default function CheckoutPage() {
   const { items, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
 
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'qrph'>('cod');
+
+  const feeConfig = {
+    qrph: { rate: 0.0134, fixed: 0 },
+    gcash: { rate: 0.0223, fixed: 0 },
+    maya: { rate: 0.0179, fixed: 0 },
+    grabpay: { rate: 0.0196, fixed: 0 },
+    card: { rate: 0.03125, fixed: 13.39 },
+  } as const;
+
+  const roundToCents = (value: number) => Math.round(value * 100) / 100;
+
+  const computeFee = (base: number, method: 'cod' | 'qrph') => {
+    if (method === 'cod') return 0;
+    const config = feeConfig.qrph;
+    const gross = (base + config.fixed) / (1 - config.rate);
+    return roundToCents(gross - base);
+  };
+
+  const transactionFee = computeFee(cartTotal, paymentMethod);
+  const totalWithFee = roundToCents(cartTotal + transactionFee);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
+    const selectedPayment = (data.get('paymentMethod') as 'cod' | 'qrph') || 'cod';
     const payload = {
       customerName: data.get('name') as string,
       customerAddress: data.get('address') as string,
       customerContact: data.get('contact') as string,
+      paymentMethod: selectedPayment,
       items: items.map(i => ({ menuItemId: i.id, quantity: i.quantity, priceAtPurchase: i.price })),
     };
     const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    if (res.ok) {
-      const order = await res.json();
-      addRecentOrder(order.id);
-      setOrderId(order.id);
-      clearCart();
-    } else {
+    if (!res.ok) {
       alert('Something went wrong. Please try again.');
+      return;
     }
+
+    const order = await res.json();
+    addRecentOrder(order.id);
+
+    if (selectedPayment === 'qrph') {
+      const checkoutRes = await fetch('/api/paymongo/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: order.id,
+          totalAmount: totalWithFee,
+          paymentFee: transactionFee,
+          paymentMethod: selectedPayment,
+          customerName: payload.customerName,
+          customerContact: payload.customerContact,
+        }),
+      });
+
+      const checkout = await checkoutRes.json();
+      if (!checkoutRes.ok) {
+        const detail = checkout?.error ? ` (${checkout.error})` : '';
+        alert(`Online checkout failed${detail}. Please try again or choose Cash on Delivery.`);
+        return;
+      }
+
+      if (checkout?.checkoutUrl) {
+        clearCart();
+        window.location.href = checkout.checkoutUrl as string;
+        return;
+      }
+    }
+
+    clearCart();
+    setOrderId(order.id);
   };
 
   if (orderId) {
@@ -92,6 +145,18 @@ export default function CheckoutPage() {
               <span>Total</span>
               <span className={styles.totalAmount}>{formatPeso(cartTotal)}</span>
             </div>
+            {paymentMethod === 'qrph' && (
+              <>
+                <div className={styles.feeRow}>
+                  <span>Transaction Fee</span>
+                  <span>{formatPeso(transactionFee)}</span>
+                </div>
+                <div className={styles.total}>
+                  <span>Total to Pay</span>
+                  <span className={styles.totalAmount}>{formatPeso(totalWithFee)}</span>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Checkout Form */}
@@ -106,10 +171,73 @@ export default function CheckoutPage() {
             <label>Contact Number
               <input name="contact" type="tel" required placeholder="e.g. 09XX-XXX-XXXX" />
             </label>
+            <div className={styles.paymentSection}>
+              <h2>Payment Method</h2>
+              <div className={styles.paymentOptions}>
+                <label className={styles.paymentOption}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod')}
+                  />
+                  <div className={styles.paymentCard}>
+                    <strong>Cash on Delivery</strong>
+                    <span>Pay when your order arrives.</span>
+                  </div>
+                  {paymentMethod === 'cod' && (
+                    <div className={`${styles.paymentDetails} ${styles.paymentDetailsInline}`}>
+                      <div className={styles.paymentRow}>
+                        <span>Total to Pay:</span>
+                        <strong>{formatPeso(cartTotal)}</strong>
+                      </div>
+                      <p className={styles.paymentHint}>
+                        Pay the exact total to the rider upon delivery.
+                      </p>
+                    </div>
+                  )}
+                </label>
+                <label className={styles.paymentOption}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="qrph"
+                    checked={paymentMethod === 'qrph'}
+                    onChange={() => setPaymentMethod('qrph')}
+                  />
+                  <div className={styles.paymentCard}>
+                    <strong>QR Ph (PayMongo)</strong>
+                    <span>Redirects to PayMongo with the exact amount.</span>
+                  </div>
+                  {paymentMethod === 'qrph' && (
+                    <div className={`${styles.paymentDetails} ${styles.paymentDetailsInline}`}>
+                      <div className={styles.paymentRow}>
+                        <span>Amount:</span>
+                        <strong>{formatPeso(cartTotal)}</strong>
+                      </div>
+                      <div className={styles.paymentRow}>
+                        <span>Transaction Fee:</span>
+                        <strong>{formatPeso(transactionFee)}</strong>
+                      </div>
+                      <div className={styles.paymentRow}>
+                        <span>Total to Pay:</span>
+                        <strong>{formatPeso(totalWithFee)}</strong>
+                      </div>
+                      <p className={styles.paymentHint}>
+                        You'll be redirected to PayMongo to scan and pay.
+                      </p>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
             <button type="submit" className={styles.orderBtn}>Place Order ✓</button>
           </form>
         </div>
       </div>
-    </main>
-  );
+    </main> 
+  ); 
 }
+
+

@@ -32,10 +32,10 @@ export default async function MenuPage() {
   const orderedSoldItems = soldIds
     .map((id: Sale['menuItemId']) => soldItems.find((item: SoldItem) => item.id === id))
     .filter((item: SoldItem | undefined): item is SoldItem => Boolean(item))
-    .map((item: SoldItem) => ({
+    .map((item: SoldItem, index: number) => ({
       ...item,
       soldCount: soldLookup.get(item.id) ?? 0,
-      isBestSeller: (soldLookup.get(item.id) ?? 0) > 0,
+      isBestSeller: index < 3 && (soldLookup.get(item.id) ?? 0) > 0,
     }));
 
   const unsoldItems = await prisma.menuItem.findMany({

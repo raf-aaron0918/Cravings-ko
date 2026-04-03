@@ -30,7 +30,7 @@ export default function AboutPage() {
           <span className={styles.eyebrow}>About</span>
           <h1>Made with memory, warmth, and everyday comfort.</h1>
           <p>
-            Crave Corner started with familiar snacks, homemade sweets, and the goal of
+            Cravings Ko started with familiar snacks, homemade sweets, and the goal of
             serving food that feels personal from the first bite.
           </p>
         </div>
@@ -40,8 +40,7 @@ export default function AboutPage() {
         <div className={styles.storyGrid}>
           <article className={styles.storyCard}>
             <h2>How It Started</h2>
-            <p>    </p>
-            <p>
+            <p>    
               Cravings Ko started as a simple idea: to make affordable yet high-quality snacks
               easily accessible to everyone, especially students and busy individuals. We noticed
               that many snack options were either expensive, limited in variety, or lacked
@@ -100,7 +99,7 @@ export default function AboutPage() {
       <section className={styles.teamSection}>
         <div className={styles.teamHeader}>
           <span className={styles.eyebrow}>Our Team</span>
-          <h2>The people behind Crave Corner.</h2>
+          <h2>The people behind Cravings Ko.</h2>
         </div>
 
         <div className={styles.teamGrid}>

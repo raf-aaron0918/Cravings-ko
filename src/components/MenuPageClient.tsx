@@ -81,9 +81,12 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                         <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
                       </div>
                       <div className={styles.metaRow}>
-                        <span className={`${styles.metaBadge} ${item.outOfStock ? styles.stockBadge : ''}`}>
-                          {item.outOfStock ? 'Out of Stock' : item.isBestSeller ? 'Best Seller' : 'Fresh Pick'}
-                        </span>
+                        {item.isBestSeller && (
+                          <span className={styles.metaBadge}>Best Seller</span>
+                        )}
+                        {item.outOfStock && (
+                          <span className={`${styles.metaBadge} ${styles.stockBadge}`}>Out of Stock</span>
+                        )}
                         <span className={styles.metaText}>{item.soldCount ?? 0} sold</span>
                       </div>
                       <p className={styles.desc}>{item.description}</p>

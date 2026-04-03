@@ -58,6 +58,7 @@ export default function Footer() {
         </div>
       )}
       <div className={styles.content}>
+        <p className={styles.address}>Blk 12 Lot 64, Ph 2, Spring Town, Bucal, Tanza, Cavite</p>
         <p>&copy; {new Date().getFullYear()} Cravings Ko. Made to Match Every Cravings.</p>
       </div>
     </footer>
