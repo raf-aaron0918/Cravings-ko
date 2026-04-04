@@ -87,7 +87,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p className={styles.description}>{item.description}</p>
             {item.details && (
               <div className={styles.details}>
-                <h3>Product Details</h3>
+                <h3>Cooking Instruction</h3>
                 <p>{item.details}</p>
               </div>
             )}

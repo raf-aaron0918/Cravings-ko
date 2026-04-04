@@ -217,8 +217,8 @@ export default function AdminMenuPage() {
           <label style={{ marginTop: '1rem' }}>Description *
             <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
           </label>
-          <label style={{ marginTop: '1rem' }}>Product Details (optional)
-            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. ingredients, allergens, serving size..." />
+          <label style={{ marginTop: '1rem' }}>Cooking Instruction (optional)
+            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. fry for 5 minutes, microwave for 2 minutes..." />
           </label>
           <div className={styles.formActions}>
             <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Add Item'}</button>
@@ -262,8 +262,8 @@ export default function AdminMenuPage() {
           <label style={{ marginTop: '1rem' }}>Description *
             <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
           </label>
-          <label style={{ marginTop: '1rem' }}>Product Details (optional)
-            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. ingredients, allergens, serving size..." />
+          <label style={{ marginTop: '1rem' }}>Cooking Instruction (optional)
+            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. fry for 5 minutes, microwave for 2 minutes..." />
           </label>
           <div className={styles.formActions}>
             <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Update Item'}</button>
