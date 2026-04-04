@@ -48,9 +48,14 @@ const EMPTY_FORM = {
   isFeatured: false,
   outOfStock: false,
   preOrder: false,
-  packagingType: '', // TUB or BOX
+  packagingType: '', 
   packagingPieces: '',
 };
+
+type ToastState = {
+  text: string;
+  type: 'success' | 'error';
+} | null;
 
 export default function AdminMenuPage() {
   const router = useRouter();
@@ -60,7 +65,7 @@ export default function AdminMenuPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [openFeedbackId, setOpenFeedbackId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [toast, setToast] = useState<ToastState>(null);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
@@ -90,56 +95,67 @@ export default function AdminMenuPage() {
     };
   }, [router]);
 
+  const showToast = (text: string, type: 'success' | 'error') => {
+    setToast({ text, type });
+    setTimeout(() => setToast(null), 4000);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append('name', form.name);
-    formData.append('description', form.description);
-    formData.append('price', form.price);
-    formData.append('category', form.category);
-    formData.append('isFeatured', String(form.isFeatured));
-    formData.append('outOfStock', String(form.outOfStock));
-    formData.append('preOrder', String(form.preOrder));
-    if (form.packagingType) formData.append('packagingType', form.packagingType);
-    if (form.packagingPieces) formData.append('packagingPieces', form.packagingPieces);
-    
-    if (form.details?.trim()) formData.append('details', form.details.trim());
-    if (file) formData.append('file', file);
+    try {
+      const formData = new FormData();
+      formData.append('name', form.name);
+      formData.append('description', form.description);
+      formData.append('price', form.price);
+      formData.append('category', form.category);
+      formData.append('isFeatured', String(form.isFeatured));
+      formData.append('outOfStock', String(form.outOfStock));
+      formData.append('preOrder', String(form.preOrder));
+      if (form.packagingType) formData.append('packagingType', form.packagingType);
+      if (form.packagingPieces) formData.append('packagingPieces', form.packagingPieces);
+      
+      if (form.details?.trim()) formData.append('details', form.details.trim());
+      if (file) formData.append('file', file);
 
-    const method = editId ? 'PUT' : 'POST';
-    const url = editId ? `/api/menu/${editId}` : '/api/menu';
+      const method = editId ? 'PUT' : 'POST';
+      const url = editId ? `/api/menu/${editId}` : '/api/menu';
 
-    const res = await fetch(url, {
-      method,
-      body: formData,
-      credentials: 'include',
-    });
+      const res = await fetch(url, {
+        method,
+        body: formData,
+        credentials: 'include',
+      });
 
-    setLoading(false);
-    if (res.ok) {
-      setMessage(editId ? 'Item updated!' : 'Item added!');
-      setForm(EMPTY_FORM);
-      setFile(null);
-      setEditId(null);
-      setOpenFeedbackId(null);
-      const itemsRes = await fetch('/api/menu', { credentials: 'include' });
-      if (itemsRes.ok) {
-        const data = await itemsRes.json();
-        setItems(
-          data.map((item: MenuItem) => ({
-            ...item,
-            category: CATEGORY_LABELS[item.category] ?? item.category,
-            outOfStock: item.outOfStock ?? false,
-          }))
-        );
+      if (res.ok) {
+        showToast(editId ? 'Item updated successfully! 🍪' : 'New item added! ✨', 'success');
+        setForm(EMPTY_FORM);
+        setFile(null);
+        setEditId(null);
+        setOpenFeedbackId(null);
+        setShowForm(false);
+        
+        const itemsRes = await fetch('/api/menu', { credentials: 'include' });
+        if (itemsRes.ok) {
+          const data = await itemsRes.json();
+          setItems(
+            data.map((item: MenuItem) => ({
+              ...item,
+              category: CATEGORY_LABELS[item.category] ?? item.category,
+              outOfStock: item.outOfStock ?? false,
+            }))
+          );
+        }
+      } else {
+        const data = await res.json().catch(() => null);
+        showToast(data?.error || 'Failed to save item. Please check your inputs.', 'error');
       }
-    } else {
-      const data = await res.json().catch(() => null);
-      setMessage(data?.error || 'Something went wrong.');
+    } catch (err) {
+      showToast('Network error. Please try again.', 'error');
+    } finally {
+      setLoading(false);
     }
-    setTimeout(() => setMessage(''), 3000);
   };
 
   const handleEdit = (item: MenuItem) => {
@@ -165,41 +181,68 @@ export default function AdminMenuPage() {
     if (!confirm('Delete this item?')) return;
     const confirmCascade = confirm('This will permanently delete the item and its order history. Continue?');
     if (!confirmCascade) return;
-    const deleteRes = await fetch(`/api/menu/${id}`, { method: 'DELETE', credentials: 'include' });
-    if (!deleteRes.ok) {
-      const data = await deleteRes.json().catch(() => null);
-      setMessage(data?.error || 'Unable to delete item.');
-      setTimeout(() => setMessage(''), 3000);
-      return;
+    
+    setLoading(true);
+    try {
+      const deleteRes = await fetch(`/api/menu/${id}`, { method: 'DELETE', credentials: 'include' });
+      if (!deleteRes.ok) {
+        const data = await deleteRes.json().catch(() => null);
+        showToast(data?.error || 'Unable to delete item.', 'error');
+        return;
+      }
+      showToast('Item deleted successfully.', 'success');
+      const res = await fetch('/api/menu', { credentials: 'include' });
+      if (res.ok) setItems(await res.json());
+    } finally {
+      setLoading(false);
     }
-    const res = await fetch('/api/menu', { credentials: 'include' });
-    if (res.ok) setItems(await res.json());
   };
 
 
   return (
     <main className={styles.main}>
+      {/* Toast Notifications */}
+      {toast && (
+        <div className={styles.toastContainer}>
+          <div className={`${styles.toast} ${toast.type === 'success' ? styles.toastSuccess : styles.toastError}`}>
+            {toast.type === 'success' ? '✅' : '❌'} {toast.text}
+          </div>
+        </div>
+      )}
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className={styles.overlay}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Processing...</p>
+        </div>
+      )}
+
       <div className={styles.header}>
         <h1>{editId ? 'Edit Item' : 'Manage Menu'}</h1>
         <Link href="/admin/dashboard" className={styles.backBtn}>Back to Dashboard</Link>
       </div>
 
-      {message && <p className={styles.message}>{message}</p>}
-      {loading && <p className={styles.loading}>Saving item...</p>}
-
       <div className={styles.formHeader}>
         <button
           type="button"
           className={styles.toggleBtn}
-          onClick={() => setShowForm((prev) => !prev)}
+          onClick={() => {
+            if (editId) {
+              setEditId(null);
+              setForm(EMPTY_FORM);
+            } else {
+              setShowForm((prev) => !prev);
+            }
+          }}
         >
-          {showForm ? 'Hide Add Form' : 'Add Item'}
+          {showForm || editId ? 'Hide Form' : 'Add Item'}
         </button>
       </div>
 
       {(showForm || editId) && (
         <form onSubmit={handleSubmit} className={styles.form}>
-          <h2>{editId ? 'Edit Item' : 'Add Item'}</h2>
+          <h2>{editId ? 'Edit Item' : 'Add New Item'}</h2>
           <div className={styles.formGrid}>
             <label>Item Name
               <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
@@ -321,7 +364,7 @@ export default function AdminMenuPage() {
               <th>Stock</th>
               <th>Rating</th>
               <th>Sold</th>
-              <th>Badges</th>
+              <th style={{ width: '80px' }}>Badges</th>
               <th>Feedback</th>
               <th>Actions</th>
             </tr>
@@ -339,22 +382,17 @@ export default function AdminMenuPage() {
                 </td>
                 <td data-label="Stock">
                   <span className={`${styles.stockTag} ${item.outOfStock ? styles.stockOut : styles.stockIn}`}>
-                    {item.outOfStock ? 'Out of Stock' : 'Available'}
+                    {item.outOfStock ? 'Out' : 'In'}
                   </span>
                 </td>
-                <td data-label="Rating">{item.rating ? `★ ${item.rating.toFixed(1)} (${item.reviewCount})` : 'No reviews'}</td>
+                <td data-label="Rating">{item.rating ? `★${item.rating.toFixed(1)}` : '—'}</td>
                 <td data-label="Sold">{item.soldCount ?? 0}</td>
                 <td data-label="Badges">
-                  {item.isBestSeller || item.preOrder ? (
-                    <span className={styles.badgeGroup}>
-                      {item.isBestSeller && (
-                        <span className={`${styles.specialtyTag} ${styles.specialtyActive}`}>Best Seller</span>
-                      )}
-                      {item.preOrder && (
-                        <span className={`${styles.specialtyTag} ${styles.specialtyInactive}`}>Pre-order</span>
-                      )}
-                    </span>
-                  ) : '—'}
+                  <div className={styles.badgeGroup}>
+                    {item.isBestSeller && <span className={`${styles.specialtyTag} ${styles.specialtyActive}`}>Best</span>}
+                    {item.preOrder && <span className={`${styles.specialtyTag} ${styles.specialtyInactive}`}>Pre</span>}
+                    {!item.isBestSeller && !item.preOrder && '—'}
+                  </div>
                 </td>
                 <td data-label="Feedback">
                   {item.reviews && item.reviews.length > 0 ? (
@@ -364,7 +402,7 @@ export default function AdminMenuPage() {
                         className={styles.feedbackBtn}
                         onClick={() => setOpenFeedbackId(current => (current === item.id ? null : item.id))}
                       >
-                        {openFeedbackId === item.id ? 'Hide Feedback' : `View Feedback (${item.reviews.length})`}
+                        {openFeedbackId === item.id ? 'Hide' : `View (${item.reviews.length})`}
                       </button>
                       {openFeedbackId === item.id && (
                         <div className={styles.feedbackList}>
@@ -374,7 +412,7 @@ export default function AdminMenuPage() {
                                 {review.rating ? `★ ${review.rating}/5` : 'No rating'}
                               </span>
                               <span className={styles.feedbackText}>
-                                {review.feedback?.trim() ? review.feedback : 'No written feedback'}
+                                {review.feedback?.trim() ? review.feedback : 'No text'}
                               </span>
                             </div>
                           ))}
@@ -382,22 +420,15 @@ export default function AdminMenuPage() {
                       )}
                     </div>
                   ) : (
-                    <span className={styles.feedbackEmpty}>No feedback yet</span>
+                    <span className={styles.feedbackEmpty}>—</span>
                   )}
                 </td>
                 <td data-label="Actions" className={styles.actions}>
                   <button onClick={() => handleEdit(item)} className={styles.editBtn}>Edit</button>
-                  <button onClick={() => handleDelete(item.id)} className={styles.deleteBtn}>Delete</button>
+                  <button onClick={() => handleDelete(item.id)} className={styles.deleteBtn}>Del</button>
                 </td>
               </tr>
             ))}
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={10} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
-                  No menu items yet. Add some above!
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
