@@ -82,13 +82,15 @@
   border-top: 2px solid var(--color-wood);
 }
 
-.stillHaveQuestions h2 {
+.stillHaveQuestions h2,
+.ctaTitle {
   font-family: var(--font-header);
   font-size: 2.2rem;
   margin-bottom: 1rem;
 }
 
-.stillHaveQuestions p {
+.stillHaveQuestions p,
+.ctaText {
   margin-bottom: 2rem;
   font-size: 1.1rem;
 }
