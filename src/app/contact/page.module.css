@@ -30,6 +30,7 @@
 }
 
 .hero h1 {
+  font-family: var(--font-header);
   font-size: 2.4rem;
   line-height: 1.05;
   margin: 0.85rem 0 0.55rem;
@@ -84,6 +85,7 @@
 }
 
 .infoBlock h3 {
+  font-family: var(--font-header);
   font-size: 1.25rem;
   line-height: 1.15;
   margin: 0.8rem 0 0.45rem;

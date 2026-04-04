@@ -30,6 +30,7 @@
 }
 
 .hero h1 {
+  font-family: var(--font-header);
   margin: 0.9rem 0 0.65rem;
   font-size: 2.45rem;
   line-height: 1.05;
@@ -82,6 +83,7 @@
 }
 
 .storyCard h2 {
+  font-family: var(--font-header);
   margin: 0.85rem 0 0.55rem;
   font-size: 1.5rem;
   line-height: 1.15;
@@ -111,6 +113,7 @@
 }
 
 .teamHeader h2 {
+  font-family: var(--font-header);
   margin: 0.85rem 0 0;
   font-size: 2rem;
 }
