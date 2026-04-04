@@ -77,22 +77,6 @@ export default function AboutPage() {
               ordering experience.
             </p>
           </article>
-
-          <article className={`${styles.storyCard} ${styles.storyCardWide}`}>
-            
-            <h2>Our Products</h2>
-            <p>
-             Cravings Ko offers a delicious selection of snacks that are perfect for any time of the day:
-            <br></br>
-            <b>Cheese Sticks</b> – Frozen and ready-to-cook, coated for that perfect crispy bite with flavorful powder options.
-            <br></br>
-            <b>Lumpia</b> – Packed with savory filling, delivered frozen for convenience, and made to turn golden and crispy when fried.
-            <br></br>
-            <b>Cookies</b> – Freshly baked and available in different flavors, perfect for satisfying your sweet cravings.
-
-            </p>
-            <Link href="/menu" className={styles.cta}>Explore the Menu</Link>
-          </article>
         </div>
       </section>
 
@@ -113,6 +97,22 @@ export default function AboutPage() {
             </p>
           </article>
         </div>
+      </section>
+
+      <section className={styles.productsSection}>
+        <article className={`${styles.storyCard} ${styles.storyCardWide}`}>
+          <h2>Our Products</h2>
+          <p>
+           Cravings Ko offers a delicious selection of snacks that are perfect for any time of the day:
+          <br></br>
+          <b>Cheese Sticks</b> – Frozen and ready-to-cook, coated for that perfect crispy bite with flavorful powder options.
+          <br></br>
+          <b>Lumpia</b> – Packed with savory filling, delivered frozen for convenience, and made to turn golden and crispy when fried.
+          <br></br>
+          <b>Cookies</b> – Freshly baked and available in different flavors, perfect for satisfying your sweet cravings.
+          </p>
+          <Link href="/menu" className={styles.cta}>Explore the Menu</Link>
+        </article>
       </section>
 
       <section className={styles.teamSection}>
