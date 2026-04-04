@@ -57,7 +57,7 @@ export default function AdminMenuPage() {
     let active = true;
 
     const loadItems = async () => {
-      const res = await fetch('/api/menu');
+      const res = await fetch('/api/menu', { credentials: 'include' });
       if (!active) return;
 
       if (res.ok) {
@@ -99,6 +99,7 @@ export default function AdminMenuPage() {
     const res = await fetch(url, {
       method,
       body: formData,
+      credentials: 'include',
     });
 
     setLoading(false);
@@ -108,7 +109,7 @@ export default function AdminMenuPage() {
       setFile(null);
       setEditId(null);
       setOpenFeedbackId(null);
-      const itemsRes = await fetch('/api/menu');
+      const itemsRes = await fetch('/api/menu', { credentials: 'include' });
       if (itemsRes.ok) {
         const data = await itemsRes.json();
         setItems(
@@ -143,8 +144,8 @@ export default function AdminMenuPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this item?')) return;
-    await fetch(`/api/menu/${id}`, { method: 'DELETE' });
-    const res = await fetch('/api/menu');
+    await fetch(`/api/menu/${id}`, { method: 'DELETE', credentials: 'include' });
+    const res = await fetch('/api/menu', { credentials: 'include' });
     if (res.ok) setItems(await res.json());
   };
 

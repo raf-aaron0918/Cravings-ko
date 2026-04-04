@@ -87,6 +87,20 @@ export async function POST(req: NextRequest) {
 
     let imageUrl = null;
     if (file) {
+      const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+      if (file.type === 'image/heic' || file.type === 'image/heif') {
+        return NextResponse.json(
+          { error: 'HEIC images are not supported. Please upload JPG or PNG.' },
+          { status: 400 }
+        );
+      }
+      if (file.type && !allowedTypes.has(file.type)) {
+        return NextResponse.json(
+          { error: 'Unsupported image type. Please upload JPG, PNG, or WebP.' },
+          { status: 400 }
+        );
+      }
+
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const safeBase = file.name.replace(/\s+/g, '-').replace(/\.[^.]+$/, '');
@@ -94,12 +108,17 @@ export async function POST(req: NextRequest) {
       const uploadPath = path.join(process.cwd(), 'public', 'uploads', filename);
 
       if (file.type.startsWith('image/')) {
-        const optimized = await sharp(buffer)
-          .rotate()
-          .resize({ width: 1200, withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toBuffer();
-        await writeFile(uploadPath, optimized);
+        try {
+          const optimized = await sharp(buffer)
+            .rotate()
+            .resize({ width: 1200, withoutEnlargement: true })
+            .webp({ quality: 80 })
+            .toBuffer();
+          await writeFile(uploadPath, optimized);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : 'Image processing failed';
+          return NextResponse.json({ error: msg }, { status: 500 });
+        }
       } else {
         await writeFile(uploadPath, buffer);
       }
