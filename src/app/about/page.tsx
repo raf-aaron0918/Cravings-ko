@@ -96,6 +96,25 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className={styles.missionVisionSection}>
+        <div className={styles.missionVisionGrid}>
+          <article className={styles.missionCard}>
+            <span className={styles.kicker}>Our Mission</span>
+            <h2>MISSION</h2>
+            <p>
+              Our mission is to deliver high-quality, delicious, and crave-worthy snacks that bring joy and satisfaction to every customer. We aim to innovate and create products that excite the taste buds and delight the senses while providing a convenient and enjoyable snacking experience. At the heart of our business is a commitment to quality, creativity, and customer satisfaction in everything we do.
+            </p>
+          </article>
+          <article className={styles.visionCard}>
+            <span className={styles.kicker}>Our Vision</span>
+            <h2>VISION</h2>
+            <p>
+              To be the leading snack brand that brings joy and satisfaction to every craving, creating memorable moments with every bite.
+            </p>
+          </article>
+        </div>
+      </section>
+
       <section className={styles.teamSection}>
         <div className={styles.teamHeader}>
           <span className={styles.eyebrow}>Our Team</span>

@@ -45,6 +45,7 @@
 }
 
 .storySection,
+.missionVisionSection,
 .teamSection {
   max-width: 1100px;
   margin: 0 auto;
@@ -56,7 +57,9 @@
   gap: 1rem;
 }
 
-.storyCard {
+.storyCard,
+.missionCard,
+.visionCard {
   background: rgba(255, 250, 245, 0.94);
   border: 1px solid rgba(108, 63, 42, 0.14);
   border-radius: 24px;
@@ -65,8 +68,7 @@
 }
 
 .storyCardWide {
-  background:
-  rgba(255, 250, 245, 0.96);
+  background: rgba(255, 250, 245, 0.96);
 }
 
 .kicker {
@@ -202,6 +204,11 @@
   color: rgba(45, 28, 17, 0.82);
 }
 
+.missionVisionGrid {
+  display: grid;
+  gap: 1rem;
+}
+
 @media (min-width: 768px) {
   .hero {
     padding: 3.6rem 2rem 3rem;
@@ -216,6 +223,7 @@
   }
 
   .storySection,
+  .missionVisionSection,
   .teamSection {
     padding: 3rem 2rem 0;
   }
@@ -225,7 +233,9 @@
     gap: 1.35rem;
   }
 
-  .storyCard {
+  .storyCard,
+  .missionCard,
+  .visionCard {
     padding: 1.45rem;
   }
 
@@ -233,7 +243,9 @@
     grid-column: 1 / -1;
   }
 
-  .storyCard h2 {
+  .storyCard h2,
+  .missionCard h2,
+  .visionCard h2 {
     font-size: 2rem;
   }
 
@@ -258,5 +270,10 @@
 
   .memberBody h3 {
     font-size: 1.35rem;
+  }
+
+  .missionVisionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem;
   }
 }
