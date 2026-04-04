@@ -37,6 +37,7 @@ export default function Navbar() {
             <li><Link href="/menu" onClick={closeMenu}>Menu</Link></li>
             <li><Link href="/about" onClick={closeMenu}>About</Link></li>
             <li><Link href="/contact" onClick={closeMenu}>Contact</Link></li>
+            <li><Link href="/faqs" onClick={closeMenu}>FAQs</Link></li>
             <li><Link href="/privacy-policy" onClick={closeMenu}>Privacy Policy</Link></li>
             <li className={styles.mobileOnly}><Link href="/order-tracker" onClick={closeMenu}>Track Order</Link></li>
           </ul>

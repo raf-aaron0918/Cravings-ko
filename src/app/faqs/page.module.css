@@ -1,0 +1,124 @@
+.main {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.header {
+  background-color: var(--color-paper);
+  padding: 4rem 1.5rem;
+  text-align: center;
+  border-bottom: 2px dashed var(--color-wood);
+}
+
+.title {
+  font-family: var(--font-header);
+  font-size: 3rem;
+  color: var(--color-wood);
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.faqSection {
+  padding: 4rem 1.5rem;
+}
+
+.faqContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.faqItem {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(67, 33, 16, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.faqItem:hover {
+  transform: translateY(-3px);
+}
+
+.question {
+  font-family: var(--font-product);
+  font-size: 1.4rem;
+  color: var(--color-wood);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.question::before {
+  content: "Q.";
+  font-family: var(--font-header);
+  font-size: 1.8rem;
+  opacity: 0.3;
+}
+
+.answer {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  opacity: 0.9;
+}
+
+.stillHaveQuestions {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  background-color: #e6dbce;
+  border-top: 2px solid var(--color-wood);
+}
+
+.stillHaveQuestions h2 {
+  font-family: var(--font-header);
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.stillHaveQuestions p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.contactBtn {
+  display: inline-block;
+  background-color: var(--color-wood);
+  color: white;
+  padding: 0.8rem 2.5rem;
+  border-radius: 999px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.contactBtn:hover {
+  background-color: #5a3523;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.2rem;
+  }
+  
+  .faqItem {
+    padding: 1.5rem;
+  }
+  
+  .question {
+    font-size: 1.2rem;
+  }
+}

@@ -67,6 +67,12 @@ export default function Footer() {
           </div>
         </div>
 
+        <div className={styles.footerLinks}>
+          <Link href="/faqs" className={styles.footerNavLink}>FAQs</Link>
+          <span className={styles.footerDivider}>|</span>
+          <Link href="/privacy-policy" className={styles.footerNavLink}>Privacy Policy</Link>
+        </div>
+
         <p className={styles.copy}>&copy; {new Date().getFullYear()} Cravings Ko. Made to Match Every Cravings.</p>
       </div>
     </footer>
