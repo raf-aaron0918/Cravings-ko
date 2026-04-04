@@ -334,7 +334,7 @@ export default function AdminMenuPage() {
                 <td data-label="Price">{formatPeso(item.price)}</td>
                 <td data-label="Packaging">
                   {item.packagingPieces && item.packagingType ? (
-                    <span className={styles.pkgTag}>{item.packagingPieces}/{item.packagingType.toLowerCase()}</span>
+                    <span className={styles.pkgTag}>{item.packagingPieces}pcs/{item.packagingType.toLowerCase()}</span>
                   ) : '—'}
                 </td>
                 <td data-label="Stock">

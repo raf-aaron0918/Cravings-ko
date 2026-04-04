@@ -75,7 +75,7 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                         )}
                         {item.packagingPieces && item.packagingType && (
                           <span className={styles.packagingBadge}>
-                            {item.packagingPieces}/{item.packagingType.toLowerCase()}
+                            {item.packagingPieces}pcs/{item.packagingType.toLowerCase()}
                           </span>
                         )}
                       </div>

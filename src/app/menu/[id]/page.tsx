@@ -83,7 +83,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <p className={styles.price}>{formatPeso(item.price)}</p>
                 {item.packagingPieces && item.packagingType && (
                   <span className={styles.packaging}>
-                    {item.packagingPieces} / {item.packagingType.toLowerCase()}
+                    {item.packagingPieces}pcs / {item.packagingType.toLowerCase()}
                   </span>
                 )}
               </div>
