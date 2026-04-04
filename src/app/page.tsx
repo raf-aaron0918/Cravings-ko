@@ -21,6 +21,8 @@ type MenuItem = {
   outOfStock?: boolean;
   preOrder?: boolean;
   isBestSeller?: boolean;
+  packagingType?: string | null;
+  packagingPieces?: number | null;
 };
 
 export default async function HomePage() {
@@ -108,6 +110,11 @@ export default async function HomePage() {
                     )}
                     {item.preOrder && (
                       <span className={styles.metaBadge}>Pre-order</span>
+                    )}
+                    {item.packagingPieces && item.packagingType && (
+                      <span className={styles.pkgBadge}>
+                        {item.packagingPieces}pcs / {item.packagingType.toLowerCase()}
+                      </span>
                     )}
                     <span className={styles.metaText}>{item.soldCount ?? 0} sold</span>
                   </div>
