@@ -85,7 +85,9 @@
   letter-spacing: 0.08em;
 }
 
-.storyCard h2 {
+.storyCard h2,
+.missionCard h2,
+.visionCard h2 {
   font-family: var(--font-header);
   margin: 0.85rem 0 0.55rem;
   font-size: 1.5rem;

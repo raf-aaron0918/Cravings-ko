@@ -40,7 +40,7 @@ export default function AboutPage() {
         <div className={styles.storyGrid}>
           <article className={styles.storyCard}>
             <h2>How It Started</h2>
-            <p>    
+            <p>
               Cravings Ko started as a simple idea: to make affordable yet high-quality snacks
               easily accessible to everyone, especially students and busy individuals. We noticed
               that many snack options were either expensive, limited in variety, or lacked
@@ -53,24 +53,24 @@ export default function AboutPage() {
           </article>
 
           <article className={styles.storyCard}>
-           
+
             <h2>What We Believe</h2>
-              
+
             <p>
-              At Cravings Ko, we stand by these core values: 
+              At Cravings Ko, we stand by these core values:
               <br></br>
               <b>Quality You Can Trust</b> – We ensure
               that every product is made with care, delivering consistent taste and freshness.
               <br></br>
               <b>Convenience Matters</b> – Our frozen cheese sticks and lumpia are designed for easy
               storage and preparation, turning perfectly crispy when fried, so you can enjoy
-              fresh snacks anytime. 
+              fresh snacks anytime.
               <br></br>
               <b>Affordability for Everyone</b> – Good food doesn’t have to be
-              expensive. We offer budget-friendly options without compromising quality. 
+              expensive. We offer budget-friendly options without compromising quality.
               <br></br>
               <b>Made to Match Every Cravings</b> – We believe that everyone has different cravings, and we are
-              here to satisfy each one with our variety of snacks. 
+              here to satisfy each one with our variety of snacks.
               <br></br>
               <b>Customer First</b> – Your
               satisfaction is our priority, and we strive to provide a smooth and enjoyable
@@ -103,13 +103,13 @@ export default function AboutPage() {
         <article className={`${styles.storyCard} ${styles.storyCardWide}`}>
           <h2>Our Products</h2>
           <p>
-           Cravings Ko offers a delicious selection of snacks that are perfect for any time of the day:
-          <br></br>
-          <b>Cheese Sticks</b> – Frozen and ready-to-cook, coated for that perfect crispy bite with flavorful powder options.
-          <br></br>
-          <b>Lumpia</b> – Packed with savory filling, delivered frozen for convenience, and made to turn golden and crispy when fried.
-          <br></br>
-          <b>Cookies</b> – Freshly baked and available in different flavors, perfect for satisfying your sweet cravings.
+            Cravings Ko offers a delicious selection of snacks that are perfect for any time of the day:
+            <br></br>
+            <b>Cheese Sticks</b> – Frozen and ready-to-cook, coated for that perfect crispy bite with flavorful powder options.
+            <br></br>
+            <b>Lumpia</b> – Packed with savory filling, delivered frozen for convenience, and made to turn golden and crispy when fried.
+            <br></br>
+            <b>Cookies</b> – Freshly baked and available in different flavors, perfect for satisfying your sweet cravings.
           </p>
           <Link href="/menu" className={styles.cta}>Explore the Menu</Link>
         </article>
