@@ -70,6 +70,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <span className={styles.category}>{displayCategory}</span>
               {isBestSeller && <span className={styles.badge}>Best Seller</span>}
               {item.outOfStock && <span className={`${styles.badge} ${styles.stockBadge}`}>Out of Stock</span>}
+              {item.preOrder && <span className={`${styles.badge} ${styles.preOrderBadge}`}>Pre-order</span>}
               <span className={styles.sold}>{item._count.orderItems ?? 0} sold</span>
             </div>
             <h1 className={styles.title}>{item.name}</h1>

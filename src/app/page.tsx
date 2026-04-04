@@ -19,6 +19,7 @@ type MenuItem = {
   reviewCount?: number;
   soldCount?: number;
   outOfStock?: boolean;
+  preOrder?: boolean;
   isBestSeller?: boolean;
 };
 
@@ -48,22 +49,7 @@ export default async function HomePage() {
     .filter((item: MenuItem | undefined): item is MenuItem => Boolean(item))
     .map((item: MenuItem) => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0, isBestSeller: true }));
 
-  const fillersNeeded = Math.max(0, 3 - orderedBest.length);
-  const fillerItems = fillersNeeded
-    ? (await prisma.menuItem.findMany({
-        where: orderedBest.length ? { NOT: { id: { in: orderedBest.map((i: MenuItem) => i.id) } } } : undefined,
-        orderBy: [
-          { updatedAt: 'desc' },
-          { name: 'asc' },
-        ],
-        take: fillersNeeded,
-      })) as MenuItem[]
-    : [];
-
-  const displayItems = [
-    ...orderedBest,
-    ...fillerItems.map(item => ({ ...item, soldCount: 0, isBestSeller: false })),
-  ];
+  const displayItems = orderedBest;
 
   return (
     <main className={styles.main}>
@@ -114,6 +100,9 @@ export default async function HomePage() {
                     )}
                     {item.outOfStock && (
                       <span className={`${styles.metaBadge} ${styles.stockBadge}`}>Out of Stock</span>
+                    )}
+                    {item.preOrder && (
+                      <span className={styles.metaBadge}>Pre-order</span>
                     )}
                     <span className={styles.metaText}>{item.soldCount ?? 0} sold</span>
                   </div>

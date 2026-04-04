@@ -92,6 +92,7 @@
 }
 
 .itemName {
+  font-family: var(--font-product);
   font-size: 1.17rem;
   margin-top: 0;
   line-height: 1.25;
@@ -156,7 +157,7 @@
 }
 
 .price {
-  font-family: var(--font-caveat), cursive;
+  font-family: var(--font-price);
   font-size: 1.2rem;
   color: var(--color-wood);
   line-height: 1;

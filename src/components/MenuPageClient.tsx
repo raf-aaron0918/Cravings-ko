@@ -19,6 +19,7 @@ type MenuItem = {
   soldCount?: number;
   isBestSeller?: boolean;
   outOfStock?: boolean;
+  preOrder?: boolean;
 };
 
 const CATEGORY_ORDER = ['Cookies', 'Cheese Sticks', 'Lumpia'];
@@ -86,6 +87,9 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                         )}
                         {item.outOfStock && (
                           <span className={`${styles.metaBadge} ${styles.stockBadge}`}>Out of Stock</span>
+                        )}
+                        {item.preOrder && (
+                          <span className={styles.metaBadge}>Pre-order</span>
                         )}
                         <span className={styles.metaText}>{item.soldCount ?? 0} sold</span>
                       </div>

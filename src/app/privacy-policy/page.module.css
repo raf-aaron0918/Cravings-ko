@@ -1,0 +1,51 @@
+.main {
+  min-height: 80vh;
+  padding: 4rem 1.5rem;
+  background: var(--color-bg);
+}
+
+.title {
+  font-family: var(--font-caveat), cursive;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-wood);
+}
+
+.placeholder {
+  max-width: 720px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(45, 28, 17, 0.8);
+}
+
+.content {
+  max-width: 780px;
+  color: rgba(45, 28, 17, 0.85);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.75rem;
+  color: var(--color-wood);
+}
+
+.content ul {
+  margin: 0.5rem 0 1.5rem;
+  padding-left: 1.2rem;
+}
+
+.content li {
+  margin-bottom: 0.4rem;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .title {
+    font-size: 2.4rem;
+  }
+}

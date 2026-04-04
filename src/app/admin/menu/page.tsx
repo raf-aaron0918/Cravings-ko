@@ -14,8 +14,11 @@ type MenuItem = {
   category: string;
   isFeatured: boolean;
   outOfStock?: boolean;
+  preOrder?: boolean;
   rating?: number;
   reviewCount?: number;
+  soldCount?: number;
+  isBestSeller?: boolean;
   reviews?: Array<{
     rating: number | null;
     feedback: string | null;
@@ -40,6 +43,7 @@ const EMPTY_FORM = {
   category: 'Cookies',
   isFeatured: false,
   outOfStock: false,
+  preOrder: false,
 };
 
 export default function AdminMenuPage() {
@@ -91,6 +95,7 @@ export default function AdminMenuPage() {
     formData.append('category', form.category);
     formData.append('isFeatured', String(form.isFeatured));
     formData.append('outOfStock', String(form.outOfStock));
+    formData.append('preOrder', String(form.preOrder));
     if (file) formData.append('file', file);
 
     const method = editId ? 'PUT' : 'POST';
@@ -128,14 +133,15 @@ export default function AdminMenuPage() {
   };
 
   const handleEdit = (item: MenuItem) => {
-    setForm({
-      name: item.name,
-      description: item.description,
-      price: String(item.price),
-      category: CATEGORY_LABELS[item.category] ?? item.category,
-      isFeatured: item.isFeatured,
-      outOfStock: item.outOfStock ?? false,
-    });
+      setForm({
+        name: item.name,
+        description: item.description,
+        price: String(item.price),
+        category: CATEGORY_LABELS[item.category] ?? item.category,
+        isFeatured: item.isFeatured,
+        outOfStock: item.outOfStock ?? false,
+        preOrder: item.preOrder ?? false,
+      });
     setFile(null);
     setEditId(item.id);
     setShowForm(false);
@@ -144,7 +150,15 @@ export default function AdminMenuPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this item?')) return;
-    await fetch(`/api/menu/${id}`, { method: 'DELETE', credentials: 'include' });
+    const confirmCascade = confirm('This will permanently delete the item and its order history. Continue?');
+    if (!confirmCascade) return;
+    const deleteRes = await fetch(`/api/menu/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (!deleteRes.ok) {
+      const data = await deleteRes.json().catch(() => null);
+      setMessage(data?.error || 'Unable to delete item.');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
     const res = await fetch('/api/menu', { credentials: 'include' });
     if (res.ok) setItems(await res.json());
   };
@@ -158,6 +172,7 @@ export default function AdminMenuPage() {
       </div>
 
       {message && <p className={styles.message}>{message}</p>}
+      {loading && <p className={styles.loading}>Saving item...</p>}
 
       <div className={styles.formHeader}>
         <button
@@ -186,6 +201,13 @@ export default function AdminMenuPage() {
             </label>
             <label>Item Image (Upload)
               <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
+            </label>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={form.preOrder}
+                onChange={e => setForm(p => ({ ...p, preOrder: e.target.checked }))} />
+              <span>Pre-order</span>
             </label>
           </div>
           <label style={{ marginTop: '1rem' }}>Description
@@ -222,6 +244,13 @@ export default function AdminMenuPage() {
                 onChange={e => setForm(p => ({ ...p, outOfStock: e.target.checked }))} />
               <span>Out of Stock</span>
             </label>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={form.preOrder}
+                onChange={e => setForm(p => ({ ...p, preOrder: e.target.checked }))} />
+              <span>Pre-order</span>
+            </label>
           </div>
           <label style={{ marginTop: '1rem' }}>Description
             <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
@@ -253,6 +282,8 @@ export default function AdminMenuPage() {
               <th>Price</th>
               <th>Stock</th>
               <th>Rating</th>
+              <th>Sold</th>
+              <th>Badges</th>
               <th>Feedback</th>
               <th>Actions</th>
             </tr>
@@ -269,6 +300,19 @@ export default function AdminMenuPage() {
                   </span>
                 </td>
                 <td data-label="Rating">{item.rating ? `★ ${item.rating.toFixed(1)} (${item.reviewCount})` : 'No reviews'}</td>
+                <td data-label="Sold">{item.soldCount ?? 0}</td>
+                <td data-label="Badges">
+                  {item.isBestSeller || item.preOrder ? (
+                    <span className={styles.badgeGroup}>
+                      {item.isBestSeller && (
+                        <span className={`${styles.specialtyTag} ${styles.specialtyActive}`}>Best Seller</span>
+                      )}
+                      {item.preOrder && (
+                        <span className={`${styles.specialtyTag} ${styles.specialtyInactive}`}>Pre-order</span>
+                      )}
+                    </span>
+                  ) : '—'}
+                </td>
                 <td data-label="Feedback">
                   {item.reviews && item.reviews.length > 0 ? (
                     <div className={styles.feedbackCell}>
@@ -306,7 +350,7 @@ export default function AdminMenuPage() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
+                <td colSpan={9} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
                   No menu items yet. Add some above!
                 </td>
               </tr>

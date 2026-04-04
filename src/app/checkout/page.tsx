@@ -149,7 +149,7 @@ export default function CheckoutPage() {
               <>
                 <div className={styles.feeRow}>
                   <span>Transaction Fee</span>
-                  <span>{formatPeso(transactionFee)}</span>
+                  <span className={styles.money}>{formatPeso(transactionFee)}</span>
                 </div>
                 <div className={styles.total}>
                   <span>Total to Pay</span>
@@ -190,7 +190,7 @@ export default function CheckoutPage() {
                     <div className={`${styles.paymentDetails} ${styles.paymentDetailsInline}`}>
                       <div className={styles.paymentRow}>
                         <span>Total to Pay:</span>
-                        <strong>{formatPeso(cartTotal)}</strong>
+                        <strong className={styles.money}>{formatPeso(cartTotal)}</strong>
                       </div>
                       <p className={styles.paymentHint}>
                         Pay the exact total to the rider upon delivery.
@@ -207,22 +207,22 @@ export default function CheckoutPage() {
                     onChange={() => setPaymentMethod('qrph')}
                   />
                   <div className={styles.paymentCard}>
-                    <strong>QR Ph (PayMongo)</strong>
+                    <strong>QR Ph</strong>
                     <span>Redirects to PayMongo with the exact amount.</span>
                   </div>
                   {paymentMethod === 'qrph' && (
                     <div className={`${styles.paymentDetails} ${styles.paymentDetailsInline}`}>
                       <div className={styles.paymentRow}>
                         <span>Amount:</span>
-                        <strong>{formatPeso(cartTotal)}</strong>
+                        <strong className={styles.money}>{formatPeso(cartTotal)}</strong>
                       </div>
                       <div className={styles.paymentRow}>
                         <span>Transaction Fee:</span>
-                        <strong>{formatPeso(transactionFee)}</strong>
+                        <strong className={styles.money}>{formatPeso(transactionFee)}</strong>
                       </div>
                       <div className={styles.paymentRow}>
                         <span>Total to Pay:</span>
-                        <strong>{formatPeso(totalWithFee)}</strong>
+                        <strong className={styles.money}>{formatPeso(totalWithFee)}</strong>
                       </div>
                       <p className={styles.paymentHint}>
                         You'll be redirected to PayMongo to scan and pay.

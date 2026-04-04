@@ -200,7 +200,7 @@
 }
 
 .price {
-  font-family: var(--font-caveat), cursive;
+  font-family: var(--font-price);
   font-size: 1.2rem;
   color: var(--color-wood);
 }
@@ -218,6 +218,7 @@
 }
 
 .card h3 {
+  font-family: var(--font-product);
   margin: 0;
   line-height: 1.15;
 }

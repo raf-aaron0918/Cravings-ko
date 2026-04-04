@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import { Prisma } from '@prisma/client';
 
 import { cookies } from 'next/headers';
 
@@ -37,6 +38,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const category = formData.get('category') as string;
     const isFeatured = formData.get('isFeatured') === 'true';
     const outOfStock = formData.get('outOfStock') === 'true';
+    const preOrder = formData.get('preOrder') === 'true';
     const file = formData.get('file') as File | null;
 
     const currentItem = await prisma.menuItem.findUnique({ where: { id } });
@@ -57,7 +59,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const item = await prisma.menuItem.update({
       where: { id },
-      data: { name, description, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock },
+      data: { name, description, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock, preOrder },
     });
     return NextResponse.json(item);
   } catch (e: unknown) {
@@ -93,11 +95,40 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!(await ensureAuth())) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { id } = await params;
-    await prisma.menuItem.delete({ where: { id } });
+    const activeOrder = await prisma.orderItem.findFirst({
+      where: {
+        menuItemId: id,
+        order: {
+          status: { in: ['PENDING', 'PREPARING', 'READY'] },
+        },
+      },
+    });
+
+    if (activeOrder) {
+      return NextResponse.json(
+        { error: 'Cannot delete item with active orders. Complete or cancel those orders first.' },
+        { status: 400 }
+      );
+    }
+
+    await prisma.$transaction([
+      prisma.orderItem.deleteMany({ where: { menuItemId: id } }),
+      prisma.menuItem.delete({ where: { id } }),
+    ]);
     return NextResponse.json({ success: true });
   } catch (e: unknown) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2003') {
+      return NextResponse.json(
+        { error: 'Cannot delete item with existing orders. Mark it out of stock instead.' },
+        { status: 400 }
+      );
+    }
     const msg = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: msg }, { status: 500 });
   }

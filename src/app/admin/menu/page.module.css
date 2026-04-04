@@ -39,6 +39,16 @@
   margin-bottom: 1.5rem;
 }
 
+.loading {
+  background: #fff3cd;
+  border: 1px solid #ffecb5;
+  color: #664d03;
+  padding: 0.7rem 1.2rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
 .formHeader {
   display: flex;
   align-items: center;
@@ -263,6 +273,12 @@
 .stockOut {
   background: #f8d7da;
   color: #842029;
+}
+
+.badgeGroup {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
 .editBtn {

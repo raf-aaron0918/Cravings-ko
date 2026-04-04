@@ -158,13 +158,13 @@ export default function OrderTrackerPage() {
               {order.items.map(item => (
                 <div key={item.id} className={styles.item}>
                   <span>{item.quantity}x {item.menuItem.name}</span>
-                  <span>{formatPeso(item.priceAtPurchase * item.quantity)}</span>
+                  <span className={styles.money}>{formatPeso(item.priceAtPurchase * item.quantity)}</span>
                 </div>
               ))}
             </div>
             <div className={styles.total}>
               <span>Total Amount</span>
-              <span>{formatPeso(order.totalAmount)}</span>
+              <span className={styles.money}>{formatPeso(order.totalAmount)}</span>
             </div>
             <div className={styles.total}>
               <span>Payment Method</span>

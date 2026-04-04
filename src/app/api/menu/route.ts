@@ -51,10 +51,25 @@ export async function GET() {
     }
   }
 
+  const sales = await prisma.orderItem.groupBy({
+    by: ['menuItemId'],
+    _sum: { quantity: true },
+    orderBy: { _sum: { quantity: 'desc' } },
+  });
+
+  const soldLookup = new Map<string, number>(
+    sales.map(item => [item.menuItemId, item._sum.quantity ?? 0])
+  );
+  const bestSellerIds = new Set(
+    sales.filter(item => (item._sum.quantity ?? 0) > 0).slice(0, 3).map(item => item.menuItemId)
+  );
+
   return NextResponse.json(
     items.map((item: MenuItem) => ({
       ...item,
       reviews: reviewMap.get(item.id) ?? [],
+      soldCount: soldLookup.get(item.id) ?? 0,
+      isBestSeller: bestSellerIds.has(item.id),
     }))
   );
 }
@@ -75,7 +90,9 @@ export async function POST(req: NextRequest) {
     const category = formData.get('category') as string;
     const isFeatured = formData.get('isFeatured') === 'true';
     const outOfStock = formData.get('outOfStock') === 'true';
+    const preOrder = formData.get('preOrder') === 'true';
     const file = formData.get('file') as File | null;
+    const MAX_IMAGE_BYTES = 30 * 1024 * 1024;
 
     if (!name || !description || !price || !category) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -87,6 +104,12 @@ export async function POST(req: NextRequest) {
 
     let imageUrl = null;
     if (file) {
+      if (file.size > MAX_IMAGE_BYTES) {
+        return NextResponse.json(
+          { error: 'Image too large. Please upload a file under 25 MB.' },
+          { status: 400 }
+        );
+      }
       const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
       if (file.type === 'image/heic' || file.type === 'image/heif') {
         return NextResponse.json(
@@ -109,10 +132,10 @@ export async function POST(req: NextRequest) {
 
       if (file.type.startsWith('image/')) {
         try {
-          const optimized = await sharp(buffer)
+          const optimized = await sharp(buffer, { limitInputPixels: 268402689 })
             .rotate()
-            .resize({ width: 1200, withoutEnlargement: true })
-            .webp({ quality: 80 })
+            .resize({ width: 1800, withoutEnlargement: true })
+            .webp({ quality: 82 })
             .toBuffer();
           await writeFile(uploadPath, optimized);
         } catch (err) {
@@ -127,7 +150,7 @@ export async function POST(req: NextRequest) {
     }
 
     const item = await prisma.menuItem.create({
-      data: { name, description, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock },
+      data: { name, description, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock, preOrder },
     });
     return NextResponse.json(item, { status: 201 });
   } catch (e: unknown) {
