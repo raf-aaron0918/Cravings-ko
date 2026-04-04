@@ -1,5 +1,5 @@
 .main {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem 5rem;
 }
@@ -91,6 +91,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .formGrid {
@@ -101,6 +104,7 @@
 
 @media (max-width: 600px) {
   .formGrid { grid-template-columns: 1fr; }
+  .form { max-width: 100%; }
 }
 
 .form label {
@@ -249,29 +253,48 @@
 
 .tableWrapper {
   overflow-x: auto;
+  background: var(--color-paper);
+  border: 1.5px solid var(--color-wood);
+  border-radius: 8px;
+  margin-bottom: 2rem;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  table-layout: auto;
 }
 
 .table th {
   text-align: left;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.5rem;
   background: var(--color-paper);
   border-bottom: 2px solid var(--color-wood);
   font-family: var(--font-lora), serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .table td {
-  padding: 0.85rem 1rem;
+  padding: 0.75rem 0.5rem;
   border-bottom: 1px solid var(--color-highlight);
   vertical-align: middle;
+}
+
+/* Specific column control */
+.table th:first-child,
+.table td:first-child {
+  padding-left: 1rem;
+  min-width: 150px;
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-right: 1rem;
+  text-align: right;
 }
 
 .pkgTag {
@@ -279,24 +302,27 @@
   background: #f0f4f8;
   border: 1px solid #d1d9e0;
   color: #24292f;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.4rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .catTag {
   background: var(--color-highlight);
-  padding: 0.2rem 0.7rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--color-wood);
+  white-space: nowrap;
 }
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
 }
 
 .feedbackCell {
@@ -309,51 +335,48 @@
   align-self: flex-start;
   background: transparent;
   color: var(--color-wood);
-  border: 1px solid rgba(108, 63, 42, 0.35);
-  padding: 0.38rem 0.75rem;
+  border: 1px solid rgba(108, 63, 42, 0.2);
+  padding: 0.3rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .feedbackList {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 220px;
-}
-
-.feedbackItem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.18rem;
+  min-width: 200px;
 }
 
 .feedbackRating {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--color-wood);
 }
 
 .feedbackText {
-  font-size: 0.8rem;
-  line-height: 1.35;
+  font-size: 0.75rem;
+  line-height: 1.3;
   color: var(--color-ink);
   opacity: 0.88;
 }
 
 .feedbackEmpty {
-  font-size: 0.8rem;
-  color: #6e5a44;
+  font-size: 0.75rem;
+  color: #8a7a6a;
+  font-style: italic;
 }
 
 .specialtyTag {
   display: inline-block;
-  padding: 0.25rem 0.65rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .specialtyActive {
@@ -368,10 +391,11 @@
 
 .stockTag {
   display: inline-block;
-  padding: 0.25rem 0.65rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .stockIn {
@@ -387,24 +411,26 @@
 .badgeGroup {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .editBtn {
   background: var(--color-accent);
   color: var(--color-bg);
-  padding: 0.4rem 0.9rem;
-  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
 }
 
 .deleteBtn {
   background: #c44;
   color: #fff;
-  padding: 0.4rem 0.9rem;
-  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
   .main {
     padding: 2rem 1rem 4rem;
   }
@@ -446,6 +472,8 @@
 
   .tableWrapper {
     overflow: visible;
+    border: none;
+    background: transparent;
   }
 
   .table,
@@ -477,11 +505,18 @@
     gap: 1rem;
     padding: 0.75rem 0;
     text-align: right;
+    border-bottom: 1px dotted var(--color-highlight);
+  }
+
+  .table td:first-child {
+    padding-left: 0;
+    min-width: 0;
   }
 
   .table td:last-child {
     border-bottom: none;
     padding-bottom: 0;
+    padding-right: 0;
   }
 
   .table td::before {
@@ -495,9 +530,10 @@
   }
 
   .actions {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
     gap: 0.6rem;
+    justify-content: flex-end;
   }
 
   .feedbackList {
@@ -524,6 +560,7 @@
   }
 
   .actions button {
-    width: 100%;
+    width: auto;
+    flex: 1;
   }
 }
