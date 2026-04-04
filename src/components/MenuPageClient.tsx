@@ -20,6 +20,8 @@ type MenuItem = {
   isBestSeller?: boolean;
   outOfStock?: boolean;
   preOrder?: boolean;
+  packagingType?: string | null;
+  packagingPieces?: number | null;
 };
 
 const CATEGORY_ORDER = ['Cookies', 'Cheese Sticks', 'Lumpia'];
@@ -70,6 +72,11 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                           />
                         ) : (
                           <span>No image</span>
+                        )}
+                        {item.packagingPieces && item.packagingType && (
+                          <span className={styles.packagingBadge}>
+                            {item.packagingPieces}/{item.packagingType.toLowerCase()}
+                          </span>
                         )}
                       </div>
                     </Link>
