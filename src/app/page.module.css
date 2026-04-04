@@ -159,7 +159,8 @@
   margin-bottom: 0.5rem;
 }
 
-.metaBadge {
+.metaBadge,
+.pkgBadge {
   display: inline-flex;
   align-items: center;
   padding: 0.16rem 0.46rem;
@@ -170,6 +171,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.pkgBadge {
+  background: rgba(150, 98, 67, 0.08);
+  border: 1px solid rgba(150, 98, 67, 0.15);
 }
 
 .stockBadge {
@@ -278,7 +284,8 @@
     gap: 0.3rem;
   }
 
-  .metaBadge {
+  .metaBadge,
+  .pkgBadge {
     font-size: 0.56rem;
     padding: 0.14rem 0.36rem;
   }
@@ -389,7 +396,7 @@
   .imagePlaceholder { height: 300px; }
   .desc { font-size: 0.9rem; margin: 0.45rem 0 0.75rem; -webkit-line-clamp: 2; }
   .metaRow { margin-bottom: 0.9rem; }
-  .metaBadge { font-size: 0.72rem; padding: 0.2rem 0.6rem; }
+  .metaBadge, .pkgBadge { font-size: 0.72rem; padding: 0.2rem 0.6rem; }
   .metaText { font-size: 0.82rem; }
   .priceRow { flex-direction: row; justify-content: space-between; align-items: center; gap: 0; padding-top: 1rem; }
   .actions { width: auto; gap: 1.5rem; justify-content: flex-start; }
