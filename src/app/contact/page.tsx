@@ -53,7 +53,7 @@ export default function ContactPage() {
 
           <div className={styles.infoBlock}>
             <span className={styles.label}>Socials</span>
-            <h3>Follow Crave Corner</h3>
+            <h3>Follow Cravings ko</h3>
             <div className={styles.socialList}>
               <a
                 href="https://www.facebook.com/people/Cravings-Ko/61579546756036/"

@@ -9,6 +9,7 @@ type MenuItem = {
   id: string;
   name: string;
   description: string;
+  details?: string | null;
   price: number;
   imageUrl: string | null;
   category: string;
@@ -39,6 +40,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 const EMPTY_FORM = {
   name: '',
   description: '',
+  details: '',
   price: '',
   category: 'Cookies',
   isFeatured: false,
@@ -96,6 +98,7 @@ export default function AdminMenuPage() {
     formData.append('isFeatured', String(form.isFeatured));
     formData.append('outOfStock', String(form.outOfStock));
     formData.append('preOrder', String(form.preOrder));
+    if (form.details?.trim()) formData.append('details', form.details.trim());
     if (file) formData.append('file', file);
 
     const method = editId ? 'PUT' : 'POST';
@@ -136,6 +139,7 @@ export default function AdminMenuPage() {
       setForm({
         name: item.name,
         description: item.description,
+        details: item.details ?? '',
         price: String(item.price),
         category: CATEGORY_LABELS[item.category] ?? item.category,
         isFeatured: item.isFeatured,
@@ -210,8 +214,11 @@ export default function AdminMenuPage() {
               <span>Pre-order</span>
             </label>
           </div>
-          <label style={{ marginTop: '1rem' }}>Description
+          <label style={{ marginTop: '1rem' }}>Description *
             <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
+          </label>
+          <label style={{ marginTop: '1rem' }}>Product Details (optional)
+            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. ingredients, allergens, serving size..." />
           </label>
           <div className={styles.formActions}>
             <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Add Item'}</button>
@@ -252,8 +259,11 @@ export default function AdminMenuPage() {
               <span>Pre-order</span>
             </label>
           </div>
-          <label style={{ marginTop: '1rem' }}>Description
+          <label style={{ marginTop: '1rem' }}>Description *
             <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
+          </label>
+          <label style={{ marginTop: '1rem' }}>Product Details (optional)
+            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. ingredients, allergens, serving size..." />
           </label>
           <div className={styles.formActions}>
             <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Update Item'}</button>

@@ -78,6 +78,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <StarRating rating={item.rating ?? 0} />
               <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
             </div>
+            <h1 className={styles.title}>{item.name}</h1>
+            <div className={styles.ratingRow}>
+              <StarRating rating={item.rating ?? 0} />
+              <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
+            </div>
             <div className={styles.buyRow}>
               <p className={styles.price}>{formatPeso(item.price)}</p>
               <div className={styles.buyButtonWrap}>
@@ -85,15 +90,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
             <p className={styles.description}>{item.description}</p>
-            <div className={styles.details}>
-              <h3>Product Details</h3>
-              <p>Handcrafted daily. Contains fresh, organic ingredients sourced from local farms.</p>
-              <ul>
-                <li>Freshly prepared on order</li>
-                <li>No artificial preservatives</li>
-                <li>Sustainable packaging</li>
-              </ul>
-            </div>
+            {item.details && (
+              <div className={styles.details}>
+                <h3>Product Details</h3>
+                <p>{item.details}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

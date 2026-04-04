@@ -39,6 +39,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const isFeatured = formData.get('isFeatured') === 'true';
     const outOfStock = formData.get('outOfStock') === 'true';
     const preOrder = formData.get('preOrder') === 'true';
+    const details = (formData.get('details') as string | null)?.trim() || null;
     const file = formData.get('file') as File | null;
 
     const currentItem = await prisma.menuItem.findUnique({ where: { id } });
@@ -59,7 +60,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const item = await prisma.menuItem.update({
       where: { id },
-      data: { name, description, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock, preOrder },
+      data: { name, description, details, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock, preOrder },
     });
     return NextResponse.json(item);
   } catch (e: unknown) {

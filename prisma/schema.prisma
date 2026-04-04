@@ -10,6 +10,7 @@ model MenuItem {
   id          String      @id @default(cuid())
   name        String
   description String
+  details     String?
   price       Float
   imageUrl    String?
   category    String      // e.g. Meals, Drinks, Desserts
