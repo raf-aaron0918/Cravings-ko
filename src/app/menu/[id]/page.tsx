@@ -78,11 +78,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <StarRating rating={item.rating ?? 0} />
               <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
             </div>
-            <h1 className={styles.title}>{item.name}</h1>
-            <div className={styles.ratingRow}>
-              <StarRating rating={item.rating ?? 0} />
-              <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
-            </div>
             <div className={styles.buyRow}>
               <p className={styles.price}>{formatPeso(item.price)}</p>
               <div className={styles.buyButtonWrap}>
