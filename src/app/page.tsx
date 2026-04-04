@@ -24,32 +24,37 @@ type MenuItem = {
 };
 
 export default async function HomePage() {
-  // Top 3 sellers by total quantity across order items
-  const bestSellers = await prisma.orderItem.groupBy({
+  // 1. Get manually featured items (Specialties)
+  const featuredItems = await prisma.menuItem.findMany({
+    where: { isFeatured: true },
+  }) as MenuItem[];
+
+  // 2. Get top sellers by sales volume
+  const salesData = await prisma.orderItem.groupBy({
     by: ['menuItemId'],
     _sum: { quantity: true },
     orderBy: { _sum: { quantity: 'desc' } },
-    take: 3,
+    take: 6,
   });
 
-  type BestSeller = (typeof bestSellers)[number];
-  const bestIds = bestSellers.map((item: BestSeller) => item.menuItemId);
+  const bestIds = salesData.map(item => item.menuItemId);
   const soldLookup = new Map<string, number>(
-    bestSellers.map((item: BestSeller) => [item.menuItemId, item._sum.quantity ?? 0])
+    salesData.map(item => [item.menuItemId, item._sum.quantity ?? 0])
   );
 
-  const bestItems = await prisma.menuItem.findMany({
-    where: { id: { in: bestIds } },
-  }) as MenuItem[];
+  // 3. Combine: Featured first, then fill up to 3 with sales-based sellers
+  const featuredIds = new Set(featuredItems.map(i => i.id));
+  const additionalIds = bestIds.filter(id => !featuredIds.has(id)).slice(0, Math.max(0, 3 - featuredItems.length));
+  
+  const additionalItems = additionalIds.length > 0 
+    ? await prisma.menuItem.findMany({ where: { id: { in: additionalIds } } }) as MenuItem[]
+    : [];
 
-  // preserve best seller order
-  type BestId = BestSeller['menuItemId'];
-  const orderedBest = bestIds
-    .map((id: BestId) => bestItems.find(i => i.id === id))
-    .filter((item: MenuItem | undefined): item is MenuItem => Boolean(item))
-    .map((item: MenuItem) => ({ ...item, soldCount: soldLookup.get(item.id) ?? 0, isBestSeller: true }));
-
-  const displayItems = orderedBest;
+  const displayItems = [...featuredItems, ...additionalItems].slice(0, 3).map(item => ({
+    ...item,
+    soldCount: soldLookup.get(item.id) ?? 0,
+    isBestSeller: true,
+  }));
 
   return (
     <main className={styles.main}>
