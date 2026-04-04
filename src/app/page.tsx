@@ -92,6 +92,11 @@ export default async function HomePage() {
                     ) : (
                       <span>No image</span>
                     )}
+                    {item.packagingPieces && item.packagingType && (
+                      <div className={styles.pkgBadgeOverlay}>
+                        {item.packagingPieces}pcs / {item.packagingType.toLowerCase()}
+                      </div>
+                    )}
                   </div>
                 </Link>
                 <div className={styles.cardBody}>
@@ -110,11 +115,6 @@ export default async function HomePage() {
                     )}
                     {item.preOrder && (
                       <span className={styles.metaBadge}>Pre-order</span>
-                    )}
-                    {item.packagingPieces && item.packagingType && (
-                      <span className={styles.pkgBadge}>
-                        {item.packagingPieces}pcs / {item.packagingType.toLowerCase()}
-                      </span>
                     )}
                     <span className={styles.metaText}>{item.soldCount ?? 0} sold</span>
                   </div>

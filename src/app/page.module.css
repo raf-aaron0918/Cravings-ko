@@ -139,6 +139,24 @@
   display: block;
 }
 
+.pkgBadgeOverlay {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--color-wood);
+  color: var(--color-wood);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
 .desc {
   font-size: 0.76rem;
   opacity: 0.8;
@@ -159,8 +177,7 @@
   margin-bottom: 0.5rem;
 }
 
-.metaBadge,
-.pkgBadge {
+.metaBadge {
   display: inline-flex;
   align-items: center;
   padding: 0.16rem 0.46rem;
@@ -171,11 +188,6 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.pkgBadge {
-  background: rgba(150, 98, 67, 0.08);
-  border: 1px solid rgba(150, 98, 67, 0.15);
 }
 
 .stockBadge {
@@ -258,6 +270,13 @@
     height: 150px;
   }
 
+  .pkgBadgeOverlay {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+  }
+
   .card h3 a {
     -webkit-line-clamp: unset;
     display: block;
@@ -284,8 +303,7 @@
     gap: 0.3rem;
   }
 
-  .metaBadge,
-  .pkgBadge {
+  .metaBadge {
     font-size: 0.56rem;
     padding: 0.14rem 0.36rem;
   }
@@ -394,9 +412,17 @@
   .card { padding: 0; }
   .cardBody { padding: 1.2rem; }
   .imagePlaceholder { height: 300px; }
+
+  .pkgBadgeOverlay {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
   .desc { font-size: 0.9rem; margin: 0.45rem 0 0.75rem; -webkit-line-clamp: 2; }
   .metaRow { margin-bottom: 0.9rem; }
-  .metaBadge, .pkgBadge { font-size: 0.72rem; padding: 0.2rem 0.6rem; }
+  .metaBadge { font-size: 0.72rem; padding: 0.2rem 0.6rem; }
   .metaText { font-size: 0.82rem; }
   .priceRow { flex-direction: row; justify-content: space-between; align-items: center; gap: 0; padding-top: 1rem; }
   .actions { width: auto; gap: 1.5rem; justify-content: flex-start; }
