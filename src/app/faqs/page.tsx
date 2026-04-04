@@ -80,7 +80,7 @@ export default function FAQPage() {
 
       <footer className={styles.stillHaveQuestions}>
         <div className="container">
-          <h2 className={styles.ctaTitle}>Still have questions?</h2>
+          <h2 className={styles.ctaTitle}>Still have questions</h2>
           <p className={styles.ctaText}>We're here to help! Reach out to us anytime.</p>
           <a href="/contact" className={styles.contactBtn}>Contact Us</a>
         </div>
