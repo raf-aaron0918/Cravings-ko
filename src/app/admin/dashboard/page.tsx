@@ -10,7 +10,7 @@ type OrderItem = {
   id: string;
   quantity: number;
   priceAtPurchase: number;
-  menuItem: { name: string };
+  menuItem: { name: string } | null;
 };
 
 type Order = {
@@ -131,7 +131,7 @@ export default function AdminDashboard() {
     .filter(o => new Date(o.createdAt) >= rangeStart)
     .reduce<Record<string, { name: string; qty: number; revenue: number; lastSold: string }>>((acc, order) => {
       order.items.forEach(item => {
-        const key = item.menuItem.name;
+        const key = item.menuItem?.name || 'Deleted Item';
         const existing = acc[key] || { name: key, qty: 0, revenue: 0, lastSold: order.createdAt };
         const newQty = existing.qty + item.quantity;
         const newRevenue = existing.revenue + item.quantity * item.priceAtPurchase;
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
               >
                 {cancellingOrder ? 'Cancelling...' : 'Confirm Cancel'}
               </button>
-            </div>
+             </div>
           </div>
         </div>
       )}
@@ -342,7 +342,7 @@ function OrderCard({ order, onStatusChange, onCancel }: { order: Order, onStatus
       <div className={styles.items}>
         {order.items.map(item => (
           <div key={item.id} className={styles.item}>
-            <span>{item.quantity}x {item.menuItem.name}</span>
+            <span>{item.quantity}x {item.menuItem?.name || 'Deleted Item'}</span>
             <span>{formatPeso(item.priceAtPurchase * item.quantity)}</span>
           </div>
         ))}
