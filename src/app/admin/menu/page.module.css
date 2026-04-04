@@ -346,7 +346,7 @@
 .table th:first-child,
 .table td:first-child {
   padding-left: 1rem;
-  min-width: 150px;
+  min-width: 155px;
 }
 
 .table th:last-child,
@@ -473,7 +473,7 @@
 }
 
 .editBtn {
-  background: var(--color_accent);
+  background: var(--color-accent);
   color: var(--color-bg);
   padding: 0.35rem 0.7rem;
   font-size: 0.8rem;
@@ -596,6 +596,7 @@
     align-items: stretch;
     gap: 0.6rem;
     justify-content: flex-end;
+    width: auto;
   }
 
   .feedbackList {
@@ -624,5 +625,7 @@
   .actions button {
     width: auto;
     flex: 1;
+    white-space: nowrap;
+    min-width: fit-content;
   }
 }

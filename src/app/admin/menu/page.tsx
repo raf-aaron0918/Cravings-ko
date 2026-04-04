@@ -129,7 +129,7 @@ export default function AdminMenuPage() {
       });
 
       if (res.ok) {
-        showToast(editId ? 'Item updated successfully!' : 'New item added!', 'success');
+        showToast(editId ? 'Item updated successfully!' : 'New item added! ✨', 'success');
         setForm(EMPTY_FORM);
         setFile(null);
         setEditId(null);
@@ -364,7 +364,7 @@ export default function AdminMenuPage() {
               <th>Stock</th>
               <th>Rating</th>
               <th>Sold</th>
-              <th style={{ width: '80px' }}>Badges</th>
+              <th style={{ width: '100px' }}>Badges</th>
               <th>Feedback</th>
               <th>Actions</th>
             </tr>
@@ -382,15 +382,15 @@ export default function AdminMenuPage() {
                 </td>
                 <td data-label="Stock">
                   <span className={`${styles.stockTag} ${item.outOfStock ? styles.stockOut : styles.stockIn}`}>
-                    {item.outOfStock ? 'Out' : 'In'}
+                    {item.outOfStock ? 'Out of Stock' : 'Available'}
                   </span>
                 </td>
                 <td data-label="Rating">{item.rating ? `★${item.rating.toFixed(1)}` : '—'}</td>
                 <td data-label="Sold">{item.soldCount ?? 0}</td>
                 <td data-label="Badges">
                   <div className={styles.badgeGroup}>
-                    {item.isBestSeller && <span className={`${styles.specialtyTag} ${styles.specialtyActive}`}>Best</span>}
-                    {item.preOrder && <span className={`${styles.specialtyTag} ${styles.specialtyInactive}`}>Pre</span>}
+                    {item.isBestSeller && <span className={`${styles.specialtyTag} ${styles.specialtyActive}`}>Best Seller</span>}
+                    {item.preOrder && <span className={`${styles.specialtyTag} ${styles.specialtyInactive}`}>Pre-order</span>}
                     {!item.isBestSeller && !item.preOrder && '—'}
                   </div>
                 </td>
@@ -425,7 +425,7 @@ export default function AdminMenuPage() {
                 </td>
                 <td data-label="Actions" className={styles.actions}>
                   <button onClick={() => handleEdit(item)} className={styles.editBtn}>Edit</button>
-                  <button onClick={() => handleDelete(item.id)} className={styles.deleteBtn}>Del</button>
+                  <button onClick={() => handleDelete(item.id)} className={styles.deleteBtn}>Delete</button>
                 </td>
               </tr>
             ))}
