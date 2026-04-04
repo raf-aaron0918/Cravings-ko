@@ -170,6 +170,12 @@
   margin-bottom: 1rem;
 }
 
+.details p {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  color: rgba(45, 28, 17, 0.82);
+}
+
 .details ul {
   list-style: none;
   padding: 0;
