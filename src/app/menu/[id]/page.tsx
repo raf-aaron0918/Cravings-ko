@@ -79,7 +79,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
             </div>
             <div className={styles.buyRow}>
-              <p className={styles.price}>{formatPeso(item.price)}</p>
+              <div className={styles.priceContainer}>
+                <p className={styles.price}>{formatPeso(item.price)}</p>
+                {item.packagingPieces && item.packagingType && (
+                  <span className={styles.packaging}>
+                    {item.packagingPieces} / {item.packagingType.toLowerCase()}
+                  </span>
+                )}
+              </div>
               <div className={styles.buyButtonWrap}>
                 <AddToCartButton item={item} />
               </div>

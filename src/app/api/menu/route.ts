@@ -92,6 +92,9 @@ export async function POST(req: NextRequest) {
     const outOfStock = formData.get('outOfStock') === 'true';
     const preOrder = formData.get('preOrder') === 'true';
     const details = (formData.get('details') as string | null)?.trim() || null;
+    const packagingType = formData.get('packagingType') as string | null;
+    const packagingPiecesStr = formData.get('packagingPieces') as string | null;
+    const packagingPieces = packagingPiecesStr ? parseInt(packagingPiecesStr, 10) : null;
     const file = formData.get('file') as File | null;
     const MAX_IMAGE_BYTES = 30 * 1024 * 1024;
 
@@ -151,7 +154,19 @@ export async function POST(req: NextRequest) {
     }
 
     const item = await prisma.menuItem.create({
-      data: { name, description, details, price: parseFloat(price), imageUrl, category, isFeatured, outOfStock, preOrder },
+      data: {
+        name,
+        description,
+        details,
+        price: parseFloat(price),
+        imageUrl,
+        category,
+        isFeatured,
+        outOfStock,
+        preOrder,
+        packagingType,
+        packagingPieces,
+      },
     });
     return NextResponse.json(item, { status: 201 });
   } catch (e: unknown) {

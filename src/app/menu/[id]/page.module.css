@@ -125,12 +125,26 @@
   justify-content: flex-start;
 }
 
+.priceContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
 .price {
   font-size: 2rem;
   font-family: var(--font-price);
   color: var(--color-wood);
   margin: 0;
   flex: 0 0 auto;
+}
+
+.packaging {
+  font-size: 0.95rem;
+  color: var(--color-wood);
+  opacity: 0.8;
+  font-weight: 600;
+  margin-top: -0.25rem;
 }
 
 .buyButtonWrap {

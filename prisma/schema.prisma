@@ -19,9 +19,11 @@ model MenuItem {
   preOrder    Boolean     @default(false)
   rating      Float       @default(0)
   reviewCount Int         @default(0)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  orderItems  OrderItem[]
+  packagingType   String?     // TUB or BOX
+  packagingPieces Int?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  orderItems      OrderItem[]
 }
 
 model Order {

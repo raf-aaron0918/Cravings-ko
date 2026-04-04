@@ -16,6 +16,8 @@ type MenuItem = {
   isFeatured: boolean;
   outOfStock?: boolean;
   preOrder?: boolean;
+  packagingType?: string | null;
+  packagingPieces?: number | null;
   rating?: number;
   reviewCount?: number;
   soldCount?: number;
@@ -46,6 +48,8 @@ const EMPTY_FORM = {
   isFeatured: false,
   outOfStock: false,
   preOrder: false,
+  packagingType: '', // TUB or BOX
+  packagingPieces: '',
 };
 
 export default function AdminMenuPage() {
@@ -98,6 +102,9 @@ export default function AdminMenuPage() {
     formData.append('isFeatured', String(form.isFeatured));
     formData.append('outOfStock', String(form.outOfStock));
     formData.append('preOrder', String(form.preOrder));
+    if (form.packagingType) formData.append('packagingType', form.packagingType);
+    if (form.packagingPieces) formData.append('packagingPieces', form.packagingPieces);
+    
     if (form.details?.trim()) formData.append('details', form.details.trim());
     if (file) formData.append('file', file);
 
@@ -145,6 +152,8 @@ export default function AdminMenuPage() {
         isFeatured: item.isFeatured,
         outOfStock: item.outOfStock ?? false,
         preOrder: item.preOrder ?? false,
+        packagingType: item.packagingType ?? '',
+        packagingPieces: item.packagingPieces ? String(item.packagingPieces) : '',
       });
     setFile(null);
     setEditId(item.id);
@@ -188,9 +197,9 @@ export default function AdminMenuPage() {
         </button>
       </div>
 
-      {showForm && !editId && (
+      {(showForm || editId) && (
         <form onSubmit={handleSubmit} className={styles.form}>
-          <h2>Add Item</h2>
+          <h2>{editId ? 'Edit Item' : 'Add Item'}</h2>
           <div className={styles.formGrid}>
             <label>Item Name
               <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
@@ -206,58 +215,72 @@ export default function AdminMenuPage() {
             <label>Item Image (Upload)
               <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
             </label>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={form.preOrder}
-                onChange={e => setForm(p => ({ ...p, preOrder: e.target.checked }))} />
-              <span>Pre-order</span>
-            </label>
-          </div>
-          <label style={{ marginTop: '1rem' }}>Description *
-            <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
-          </label>
-          <label style={{ marginTop: '1rem' }}>Cooking Instruction (optional)
-            <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. fry for 5 minutes, microwave for 2 minutes..." />
-          </label>
-          <div className={styles.formActions}>
-            <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Add Item'}</button>
-          </div>
-        </form>
-      )}
+            
+            <fieldset className={styles.fieldset}>
+              <legend>Packaging</legend>
+              <div className={styles.radioGroup}>
+                <label className={styles.radioLabel}>
+                  <input 
+                    type="radio" 
+                    name="packagingType" 
+                    value="TUB" 
+                    checked={form.packagingType === 'TUB'} 
+                    onChange={e => setForm(p => ({ ...p, packagingType: e.target.value }))}
+                  />
+                  <span>Tub</span>
+                </label>
+                <label className={styles.radioLabel}>
+                  <input 
+                    type="radio" 
+                    name="packagingType" 
+                    value="BOX" 
+                    checked={form.packagingType === 'BOX'} 
+                    onChange={e => setForm(p => ({ ...p, packagingType: e.target.value }))}
+                  />
+                  <span>Box</span>
+                </label>
+                <button 
+                  type="button" 
+                  className={styles.clearBtn}
+                  onClick={() => setForm(p => ({ ...p, packagingType: '', packagingPieces: '' }))}
+                >
+                  Clear Selection
+                </button>
+              </div>
+              
+              {form.packagingType && (
+                <label className={styles.piecesLabel}>
+                  Pieces per {form.packagingType.toLowerCase()}
+                  <input 
+                    type="number" 
+                    min="1" 
+                    value={form.packagingPieces} 
+                    onChange={e => setForm(p => ({ ...p, packagingPieces: e.target.value }))}
+                    placeholder="e.g. 10"
+                    required
+                  />
+                </label>
+              )}
+            </fieldset>
 
-      {editId && (
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <h2>Edit Item</h2>
-          <div className={styles.formGrid}>
-            <label>Item Name
-              <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
-            </label>
-            <label>Category
-              <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>
-                {CATEGORIES.map(category => <option key={category}>{category}</option>)}
-              </select>
-            </label>
-            <label>Price (PHP)
-              <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} required />
-            </label>
-            <label>Item Image (Upload)
-              <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
-            </label>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={form.outOfStock}
-                onChange={e => setForm(p => ({ ...p, outOfStock: e.target.checked }))} />
-              <span>Out of Stock</span>
-            </label>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={form.preOrder}
-                onChange={e => setForm(p => ({ ...p, preOrder: e.target.checked }))} />
-              <span>Pre-order</span>
-            </label>
+            <div className={styles.checkboxGroup}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={form.preOrder}
+                  onChange={e => setForm(p => ({ ...p, preOrder: e.target.checked }))} />
+                <span>Pre-order</span>
+              </label>
+              {editId && (
+                <label className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    checked={form.outOfStock}
+                    onChange={e => setForm(p => ({ ...p, outOfStock: e.target.checked }))} />
+                  <span>Out of Stock</span>
+                </label>
+              )}
+            </div>
           </div>
           <label style={{ marginTop: '1rem' }}>Description *
             <textarea rows={3} value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} required />
@@ -266,18 +289,20 @@ export default function AdminMenuPage() {
             <textarea rows={3} value={form.details} onChange={e => setForm(p => ({ ...p, details: e.target.value }))} placeholder="e.g. fry for 5 minutes, microwave for 2 minutes..." />
           </label>
           <div className={styles.formActions}>
-            <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Update Item'}</button>
-            <button
-              type="button"
-              onClick={() => {
-                setEditId(null);
-                setForm(EMPTY_FORM);
-                setFile(null);
-              }}
-              className={styles.cancelBtn}
-            >
-              Cancel
-            </button>
+            <button type="submit" disabled={loading}>{loading ? 'Saving...' : (editId ? 'Update Item' : 'Add Item')}</button>
+            {editId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditId(null);
+                  setForm(EMPTY_FORM);
+                  setFile(null);
+                }}
+                className={styles.cancelBtn}
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </form>
       )}
@@ -292,6 +317,7 @@ export default function AdminMenuPage() {
               <th>Name</th>
               <th>Category</th>
               <th>Price</th>
+              <th>Packaging</th>
               <th>Stock</th>
               <th>Rating</th>
               <th>Sold</th>
@@ -306,6 +332,11 @@ export default function AdminMenuPage() {
                 <td data-label="Name">{item.name}</td>
                 <td data-label="Category"><span className={styles.catTag}>{item.category}</span></td>
                 <td data-label="Price">{formatPeso(item.price)}</td>
+                <td data-label="Packaging">
+                  {item.packagingPieces && item.packagingType ? (
+                    <span className={styles.pkgTag}>{item.packagingPieces}/{item.packagingType.toLowerCase()}</span>
+                  ) : '—'}
+                </td>
                 <td data-label="Stock">
                   <span className={`${styles.stockTag} ${item.outOfStock ? styles.stockOut : styles.stockIn}`}>
                     {item.outOfStock ? 'Out of Stock' : 'Available'}
@@ -362,7 +393,7 @@ export default function AdminMenuPage() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
+                <td colSpan={10} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
                   No menu items yet. Add some above!
                 </td>
               </tr>
