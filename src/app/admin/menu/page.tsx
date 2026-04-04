@@ -272,7 +272,9 @@ export default function AdminMenuPage() {
         </form>
       )}
 
-      <h2 className={styles.tableTitle}>All Menu Items ({items.length})</h2>
+      <h2 className={styles.tableTitle}>
+        All Menu Items <span className={styles.count}>({items.length})</span>
+      </h2>
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
