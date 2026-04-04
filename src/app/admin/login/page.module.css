@@ -18,6 +18,8 @@
 }
 
 .card h1 {
+  font-family: var(--font-lora), serif;
+  font-weight: 700;
   font-size: 3rem;
   margin-bottom: 0.5rem;
 }
