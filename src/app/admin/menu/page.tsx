@@ -129,7 +129,7 @@ export default function AdminMenuPage() {
       });
 
       if (res.ok) {
-        showToast(editId ? 'Item updated successfully! 🍪' : 'New item added! ✨', 'success');
+        showToast(editId ? 'Item updated successfully!' : 'New item added!', 'success');
         setForm(EMPTY_FORM);
         setFile(null);
         setEditId(null);
