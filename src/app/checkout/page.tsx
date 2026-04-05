@@ -46,6 +46,7 @@ export default function CheckoutPage() {
       customerAddress: data.get('address') as string,
       customerContact: data.get('contact') as string,
       paymentMethod: selectedPayment,
+      transactionType: data.get('transactionType') as string || 'DELIVERY',
       items: items.map(i => ({ menuItemId: i.id, quantity: i.quantity, priceAtPurchase: i.price })),
     };
     const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -204,6 +205,20 @@ export default function CheckoutPage() {
                       <p className={styles.paymentHint}>
                         Pay the exact total amount upon delivery.
                       </p>
+                      <div className={styles.transactionMode}>
+                        <span>Mode of Transaction:</span>
+                        <div className={styles.transactionOptions}>
+                          <label>
+                            <input type="radio" name="transactionType" value="DELIVERY" defaultChecked /> Delivery
+                          </label>
+                          <label>
+                            <input type="radio" name="transactionType" value="PICKUP" /> Pick up
+                          </label>
+                          <label>
+                            <input type="radio" name="transactionType" value="MEETUP" /> Meet up
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </label>

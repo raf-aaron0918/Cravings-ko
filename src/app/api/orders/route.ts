@@ -16,6 +16,7 @@ type OrderRequestBody = {
   customerAddress: string;
   customerContact: string;
   paymentMethod?: string;
+  transactionType?: string;
   items: OrderRequestItem[];
 };
 
@@ -27,6 +28,7 @@ async function sendOrderEmail(params: {
   customerContact: string;
   paymentMethod: string | null;
   paymentStatus: string | null;
+  transactionType: string | null;
   totalAmount: number;
   items: { name: string; quantity: number; lineTotal: number; price: number; imageUrl?: string | null }[];
 }) {
@@ -130,8 +132,8 @@ async function sendOrderEmail(params: {
             <span>${formatPeso(params.totalAmount)}</span>
           </div>
           <div class="total-row">
-            <span>Payment Method:</span>
-            <span>${paymentText}</span>
+            <span>Transaction Mode:</span>
+            <span>${params.transactionType || 'DELIVERY'}</span>
           </div>
           <div class="total-row grand-total">
             <span><strong>Total Paid:</strong></span>
@@ -198,6 +200,7 @@ async function sendOrderEmail(params: {
 
           <div style="background-color: #f9f9f9; padding: 15px; border-radius: 6px; margin-top: 25px;">
             <p style="margin: 5px 0;"><strong>Payment Method:</strong> ${paymentText}</p>
+            <p style="margin: 5px 0;"><strong>Transaction Mode:</strong> ${params.transactionType || 'DELIVERY'}</p>
             <p style="margin: 5px 0; font-size: 18px;"><strong>Total Amount:</strong> <span style="color: #27ae60;">${formatPeso(params.totalAmount)}</span></p>
           </div>
 
@@ -253,7 +256,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json() as OrderRequestBody;
-    const { customerName, customerEmail, customerAddress, customerContact, items, paymentMethod } = body;
+    const { customerName, customerEmail, customerAddress, customerContact, items, paymentMethod, transactionType } = body;
     const normalizedMethod = paymentMethod === 'cod' ? 'COD' : paymentMethod === 'qrph' ? 'QRPH' : null;
 
     const order = await prisma.order.create({
@@ -264,6 +267,7 @@ export async function POST(req: NextRequest) {
         customerContact,
         status: 'PENDING',
         paymentMethod: normalizedMethod,
+        transactionType: transactionType || 'DELIVERY',
         paymentStatus: normalizedMethod ? 'UNPAID' : null,
         totalAmount: items.reduce((acc: number, item) => acc + (item.priceAtPurchase * item.quantity), 0),
         items: {
@@ -302,6 +306,7 @@ export async function POST(req: NextRequest) {
         customerContact,
         paymentMethod: order.paymentMethod,
         paymentStatus: order.paymentStatus,
+        transactionType: order.transactionType,
         totalAmount: order.totalAmount,
         items: emailItems,
       });

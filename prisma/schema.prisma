@@ -32,6 +32,7 @@ model Order {
   customerEmail   String?
   customerAddress String
   customerContact String
+  transactionType String?    // MEETUP, DELIVERY, PICKUP
   totalAmount     Float
   paymentMethod   String?     // COD, QRPH
   paymentStatus   String?     // UNPAID, PAID

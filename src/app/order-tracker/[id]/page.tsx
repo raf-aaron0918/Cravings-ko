@@ -28,6 +28,7 @@ type OrderWithItems = {
   rating: number | null;
   feedback: string | null;
   cancelReason: string | null;
+  transactionType: string | null;
   createdAt: string;
   completedAt: string | null;
   items: OrderItem[];
@@ -170,6 +171,12 @@ export default function OrderTrackerPage() {
               <span>Payment Method :</span>
               <span>{paymentMethodLabel}</span>
             </div>
+            {order.transactionType && (
+              <div className={styles.total}>
+                <span>Transaction Mode :</span>
+                <span>{order.transactionType}</span>
+              </div>
+            )}
             {order.paymentStatus === 'PAID' && order.paymentReference && (
               <div className={styles.total}>
                 <span>Payment Reference</span>
