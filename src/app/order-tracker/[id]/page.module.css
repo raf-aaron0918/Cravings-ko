@@ -102,6 +102,18 @@
   border-radius: 4px;
 }
 
+.adminNote {
+  background: #fff8e1;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
 .tip {
   font-size: 0.8rem;
   opacity: 0.6;
