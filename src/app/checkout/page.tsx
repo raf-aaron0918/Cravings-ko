@@ -219,6 +219,7 @@ export default function CheckoutPage() {
                             <input type="radio" name="transactionType" value="MEETUP" /> Meet up
                           </label>
                         </div>
+                        <p className={styles.adminNoteInFlow}>Note: Our admin will call you to confirm your delivery details.</p>
                       </div>
                     </div>
                   )}
