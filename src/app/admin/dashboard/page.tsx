@@ -25,6 +25,7 @@ type Order = {
   rating: number | null;
   feedback: string | null;
   cancelReason: string | null;
+  transactionType: string | null;
   createdAt: string;
   items: OrderItem[];
 };
@@ -337,6 +338,9 @@ function OrderCard({ order, onStatusChange, onCancel }: { order: Order, onStatus
         <p><strong>Customer:</strong> {order.customerName}</p>
         <p><strong>Contact:</strong> {order.customerContact}</p>
         <p><strong>Address:</strong> {order.customerAddress}</p>
+        {order.transactionType && (
+          <p><strong>Mode:</strong> <span className={styles.transactionBadge}>{order.transactionType}</span></p>
+        )}
       </div>
 
       <div className={styles.items}>

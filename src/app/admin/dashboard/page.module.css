@@ -611,3 +611,14 @@
   font-style: italic;
   opacity: 0.6;
 }
+
+ . t r a n s a c t i o n B a d g e   { 
+     b a c k g r o u n d :   v a r ( - - c o l o r - h i g h l i g h t ) ; 
+     b o r d e r :   1 p x   s o l i d   v a r ( - - c o l o r - w o o d ) ; 
+     p a d d i n g :   0 . 1 r e m   0 . 5 r e m ; 
+     b o r d e r - r a d i u s :   4 p x ; 
+     f o n t - s i z e :   0 . 8 r e m ; 
+     f o n t - w e i g h t :   b o l d ; 
+     m a r g i n - l e f t :   0 . 3 r e m ; 
+ }  
+ 
