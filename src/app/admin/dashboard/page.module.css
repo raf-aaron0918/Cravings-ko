@@ -1,104 +1,87 @@
 .main {
-  max-width: 1000px;
+  padding: 1.5rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 5rem;
-}
-
-.main h1,
-.main h2,
-.main h3 {
-  font-family: var(--font-lora), serif;
-  font-weight: 700;
-  letter-spacing: 0.01em;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--color-wood);
-  padding-bottom: 1.5rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--color-ink);
 }
 
 .header h1 {
-  font-size: 3rem;
+  margin: 0;
+  font-family: var(--font-header);
+  font-size: 2.5rem;
 }
 
 .nav {
   display: flex;
   gap: 1rem;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .navBtn {
-  background: var(--color-wood);
-  color: var(--color-bg);
-  padding: 0.6rem 1.4rem;
-  border-radius: 4px;
-  font-family: var(--font-lora), serif;
-  font-size: 0.95rem;
-  display: inline-block;
+  background: var(--color-ink);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
   text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
 }
 
 .navBtnOutline {
   background: transparent;
-  border: 1.5px solid var(--color-wood);
-  color: var(--color-wood);
-  padding: 0.55rem 1.3rem;
-  border-radius: 4px;
-  font-family: var(--font-lora), serif;
-  font-size: 0.95rem;
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-ink);
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .logoutBtn {
-  background: transparent;
-  border: 1.5px solid var(--color-wood);
-  color: var(--color-wood);
-  padding: .5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
+  background: #c44;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
   font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .stats {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  flex-wrap: nowrap;
-  /* Force row on mobile */
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 }
 
 .statCard {
-  flex: 1;
-  min-width: 0;
-  /* Allow shrinking */
   background: var(--color-paper);
+  padding: 1.5rem;
   border: 1.5px solid var(--color-wood);
+  box-shadow: 4px 4px 0 var(--color-highlight);
   border-radius: 4px;
-  padding: 0.8rem;
-  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.5rem;
 }
 
 .statCard span {
-  font-size: 0.75rem;
-  white-space: nowrap;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
 }
 
 .statCard strong {
-  font-family: var(--font-caveat), cursive;
-  font-size: 1.6rem;
+  font-size: 2.5rem;
   color: var(--color-wood);
-  line-height: 1;
 }
 
 .section {
@@ -106,202 +89,11 @@
 }
 
 .sectionTitle {
-  font-size: 2rem;
+  font-family: var(--font-header);
+  font-size: 1.8rem;
   margin-bottom: 1.5rem;
-}
-
-.salesHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.rangeChips {
-  display: inline-flex;
-  gap: 0.5rem;
-}
-
-.rangeChip {
-  border: 1.5px solid var(--color-wood);
-  background: transparent;
-  color: var(--color-wood);
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.rangeChipActive {
-  background: var(--color-wood);
-  color: var(--color-bg);
-}
-
-.salesTable {
-  border: 1.5px solid var(--color-wood);
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--color-paper);
-  margin-top: 0.75rem;
-}
-
-.salesHeaderRow,
-.salesRow {
-  display: grid;
-  grid-template-columns: 2fr 0.8fr 1fr 1.5fr;
-  gap: 0.5rem;
-  padding: 0.8rem 1rem;
-  align-items: center;
-}
-
-.salesHeaderRow {
-  background: var(--color-wood);
-  color: var(--color-bg);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.salesRow:nth-child(even) {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.salesName {
-  font-weight: 700;
-}
-
-@media (max-width: 720px) {
-
-  .salesHeaderRow,
-  .salesRow {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 900px) {
-  .orderList {
-    gap: 0.6rem;
-  }
-
-  .orderCard {
-    padding: 0.6rem 0.7rem;
-  }
-
-  .orderHeader {
-    margin-bottom: 0.2rem;
-  }
-
-  .customerInfo {
-    margin-bottom: 0.18rem;
-  }
-
-  .items {
-    padding-bottom: 0.16rem;
-    margin-bottom: 0.16rem;
-  }
-
-  .orderFooter {
-    gap: 0.2rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .main {
-    padding: 1.4rem 0.75rem 2.5rem;
-  }
-
-  .orderList {
-    gap: 0.45rem;
-  }
-
-  .nav {
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .sectionTitle {
-    font-size: 1.6rem;
-  }
-
-  .orderCard {
-    padding: 0.4rem 0.45rem;
-  }
-
-  .orderHeader {
-    margin-bottom: 0.12rem;
-    gap: 0.15rem;
-  }
-
-  .orderHeader h3 {
-    font-size: 0.85rem;
-    line-height: 1;
-  }
-
-  .date {
-    font-size: 0.52rem;
-  }
-
-  .statusSelect,
-  .statusPill {
-    font-size: 0.52rem;
-    padding: 0.12rem 0.24rem;
-  }
-
-  .customerInfo {
-    padding: 0.16rem 0.24rem;
-    margin-bottom: 0.1rem;
-    gap: 0.08rem;
-    font-size: 0.54rem;
-    grid-template-columns: 1fr;
-  }
-
-  .items {
-    padding-bottom: 0.1rem;
-    margin-bottom: 0.1rem;
-  }
-
-  .item {
-    font-size: 0.54rem;
-    margin-bottom: 0.06rem;
-  }
-
-  .cancelReasonBox {
-    padding: 0.2rem;
-    margin: 0.18rem 0;
-    font-size: 0.54rem;
-  }
-
-  .orderFooter {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.14rem;
-  }
-
-
-  .orderActions {
-    width: auto;
-    gap: 0.16rem;
-  }
-
-  .cancelOrderBtn {
-    padding: 0.14rem 0.22rem;
-    font-size: 0.5rem;
-  }
-
-  .total {
-    font-size: 0.68rem;
-  }
-
-  .salesHeaderRow,
-  .salesRow {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.35rem;
-    font-size: 0.82rem;
-  }
+  border-left: 6px solid var(--color-wood);
+  padding-left: 1rem;
 }
 
 .collapsibleHeader {
@@ -309,14 +101,12 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  border-bottom: 1px solid var(--color-wood);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.5rem;
+  padding-right: 1rem;
   transition: opacity 0.2s;
 }
 
 .collapsibleHeader:hover {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .toggleIcon {
@@ -333,7 +123,9 @@
 
 .orderCard {
   background: var(--color-paper);
-  padding: 2rem;
+  padding: 1.8rem;
+  border: 1.5px solid var(--color-wood);
+  position: relative;
   border-radius: 4px;
 }
 
@@ -342,6 +134,14 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed rgba(116, 79, 70, 0.3);
+}
+
+.orderHeader h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--color-wood);
 }
 
 .paymentBadge {
@@ -421,7 +221,6 @@
   letter-spacing: 0.02em;
 }
 
-
 .statusPillExpired {
   background: rgba(186, 30, 30, 0.22);
   color: #7a1515;
@@ -468,7 +267,6 @@
   align-items: center;
 }
 
-
 .orderActions {
   display: flex;
   align-items: center;
@@ -480,6 +278,9 @@
   color: #fff;
   padding: 0.55rem 0.9rem;
   font-size: 0.82rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .total {
@@ -489,8 +290,7 @@
   font-weight: bold;
 }
 
-
-.viewTracker {
+.trackLink {
   font-size: 0.85rem;
   color: var(--color-wood);
   text-decoration: underline;
@@ -591,11 +391,18 @@
   background: transparent;
   color: var(--color-wood);
   border: 1.5px solid var(--color-wood);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .modalDangerBtn {
   background: #c44;
   color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .loading {
@@ -612,13 +419,13 @@
   opacity: 0.6;
 }
 
- . t r a n s a c t i o n B a d g e   { 
-     b a c k g r o u n d :   v a r ( - - c o l o r - h i g h l i g h t ) ; 
-     b o r d e r :   1 p x   s o l i d   v a r ( - - c o l o r - w o o d ) ; 
-     p a d d i n g :   0 . 1 r e m   0 . 5 r e m ; 
-     b o r d e r - r a d i u s :   4 p x ; 
-     f o n t - s i z e :   0 . 8 r e m ; 
-     f o n t - w e i g h t :   b o l d ; 
-     m a r g i n - l e f t :   0 . 3 r e m ; 
- }  
- 
+.transactionBadge {
+  background: var(--color-bg);
+  border: 1.2px solid var(--color-wood);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-wood);
+  text-transform: uppercase;
+}
