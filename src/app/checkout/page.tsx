@@ -52,7 +52,9 @@ export default function CheckoutPage() {
     const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!res.ok) {
       const errorData = await res.json();
-      alert(`Something went wrong: ${errorData.error || 'Unknown error'}`);
+      const detailStr = errorData.details ? ` [${errorData.details}]` : '';
+      const metaStr = errorData.meta ? ` (${JSON.stringify(errorData.meta)})` : '';
+      alert(`Something went wrong: ${errorData.error || 'Unknown error'}${detailStr}${metaStr}`);
       setIsSubmitting(false);
       return;
     }

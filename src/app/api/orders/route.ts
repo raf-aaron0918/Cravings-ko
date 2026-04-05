@@ -319,7 +319,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(order, { status: 201 });
   } catch (e: unknown) {
-    const error = e as Error;
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('CRITICAL ORDER ERROR:', e);
+    const error = e as any;
+    return NextResponse.json({ 
+      error: error.message || 'Unknown server error',
+      details: error.code || 'NO_CODE',
+      meta: error.meta || null
+    }, { status: 500 });
   }
 }
