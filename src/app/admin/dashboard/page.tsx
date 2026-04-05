@@ -209,7 +209,9 @@ export default function AdminDashboard() {
       )}
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Active Orders ({pendingOrders.length})</h2>
+        <h2 className={`${styles.sectionTitle} ${styles.activeOrdersTitle}`}>
+          Active Orders <span className={styles.sectionCount}>({pendingOrders.length})</span>
+        </h2>
         <div className={styles.orderList}>
           {pendingOrders.map(order => (
             <OrderCard key={order.id} order={order} onStatusChange={handleStatusChange} onCancel={openCancelModal} />
@@ -220,7 +222,9 @@ export default function AdminDashboard() {
 
       <section className={styles.section}>
         <div className={styles.collapsibleHeader} onClick={() => setShowCompleted(!showCompleted)}>
-          <h2 className={styles.sectionTitle}>Completed / Cancelled ({completedOrders.length})</h2>
+          <h2 className={styles.sectionTitle}>
+            Completed / Cancelled <span className={styles.sectionCount}>({completedOrders.length})</span>
+          </h2>
           <span className={styles.toggleIcon}>{showCompleted ? '−' : '+'}</span>
         </div>
 

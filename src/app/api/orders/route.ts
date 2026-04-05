@@ -261,7 +261,60 @@ export async function POST(req: NextRequest) {
     const body = await req.json() as OrderRequestBody;
     console.log('ORDER REQUEST BODY:', JSON.stringify(body, null, 2));
     const { customerName, customerEmail, customerAddress, customerContact, items, paymentMethod, transactionType } = body;
-    const normalizedMethod = paymentMethod === 'cod' ? 'COD' : paymentMethod === 'qrph' ? 'QRPH' : null;
+    const normalizedMethod =
+      paymentMethod === 'cod' || paymentMethod === 'COD'
+        ? 'COD'
+        : paymentMethod === 'qrph' || paymentMethod === 'QRPH'
+          ? 'QRPH'
+          : null;
+
+    if (!customerName || !customerAddress || !customerContact) {
+      return NextResponse.json({ error: 'Missing required customer details.' }, { status: 400 });
+    }
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: 'Your cart is empty. Please add items before ordering.' }, { status: 400 });
+    }
+
+    if (!normalizedMethod) {
+      return NextResponse.json({ error: 'Invalid payment method.' }, { status: 400 });
+    }
+
+    const requestedItems = items
+      .map(item => ({
+        menuItemId: item.menuItemId,
+        quantity: Number(item.quantity),
+      }))
+      .filter(item => Boolean(item.menuItemId) && Number.isFinite(item.quantity) && item.quantity > 0);
+
+    if (requestedItems.length === 0) {
+      return NextResponse.json({ error: 'No valid items found in your cart.' }, { status: 400 });
+    }
+
+    const menuItems = await prisma.menuItem.findMany({
+      where: { id: { in: requestedItems.map(item => item.menuItemId) } },
+      select: { id: true, name: true, imageUrl: true, price: true, outOfStock: true },
+    });
+    const menuLookup = new Map(menuItems.map(item => [item.id, item]));
+    const missingIds = requestedItems.map(item => item.menuItemId).filter(id => !menuLookup.has(id));
+    const outOfStockIds = menuItems.filter(item => item.outOfStock).map(item => item.id);
+
+    if (missingIds.length > 0 || outOfStockIds.length > 0) {
+      return NextResponse.json({
+        error: 'Some items in your cart are no longer available.',
+        details: missingIds.length > 0 ? 'MISSING_ITEMS' : 'OUT_OF_STOCK',
+        meta: { missingIds, outOfStockIds },
+      }, { status: 400 });
+    }
+
+    const orderItems = requestedItems.map(item => {
+      const menu = menuLookup.get(item.menuItemId)!;
+      return {
+        menuItemId: item.menuItemId,
+        quantity: item.quantity,
+        priceAtPurchase: menu.price,
+      };
+    });
 
     const order = await prisma.order.create({
       data: {
@@ -273,24 +326,16 @@ export async function POST(req: NextRequest) {
         paymentMethod: normalizedMethod,
         transactionType: transactionType || 'DELIVERY',
         paymentStatus: normalizedMethod ? 'UNPAID' : null,
-        totalAmount: items.reduce((acc: number, item) => acc + (item.priceAtPurchase * item.quantity), 0),
+        totalAmount: orderItems.reduce((acc, item) => acc + (item.priceAtPurchase * item.quantity), 0),
         items: {
-          create: items.map((item) => ({
-            menuItemId: item.menuItemId,
-            quantity: item.quantity,
-            priceAtPurchase: item.priceAtPurchase,
-          })),
+          create: orderItems,
         },
       },
     });
 
-    const menuItems = await prisma.menuItem.findMany({
-      where: { id: { in: items.map(item => item.menuItemId) } },
-      select: { id: true, name: true, imageUrl: true },
-    });
     const itemLookup = new Map(menuItems.map(item => [item.id, item]));
     
-    const emailItems = items.map(item => {
+    const emailItems = orderItems.map(item => {
       const match = itemLookup.get(item.menuItemId);
       return {
         name: match?.name ?? 'Item',

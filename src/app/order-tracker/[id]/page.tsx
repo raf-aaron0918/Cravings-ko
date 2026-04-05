@@ -130,7 +130,7 @@ export default function OrderTrackerPage() {
           ) : !isCompleted ? (
             <div className={styles.statusMsg}>
               <p className={styles.tip}>We&apos;ll keep you updated as we cook!</p>
-              <p className={styles.adminNote}>Our admin will call you to confirm your delivery/pickup details.</p>
+              <p className={styles.adminNote}>Our admin will contact you to confirm your delivery/pickup/meetup details.</p>
               {canCancel && (
                 <button type="button" className={styles.cancelBtn} onClick={handleCancelOrder} disabled={cancelling}>
                   {cancelling ? 'Cancelling...' : 'Cancel Order'}

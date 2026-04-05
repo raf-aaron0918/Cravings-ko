@@ -9,6 +9,7 @@ type RecentTrackedOrder = {
   id: string;
   status: string;
   createdAt: string;
+  transactionType: string | null;
   items: Array<{
     id: string;
     quantity: number;
@@ -57,6 +58,7 @@ export default function OrderSearchPage() {
             id: order.id as string,
             status: order.status as string,
             createdAt: order.createdAt as string,
+            transactionType: (order.transactionType as string | null) ?? null,
             items: order.items as RecentTrackedOrder['items'],
           };
         })
@@ -121,6 +123,9 @@ export default function OrderSearchPage() {
                       >
                         <span className={styles.recentId}>#{order.id.slice(-6)}</span>
                         <span className={styles.recentMeta}>{order.status}</span>
+                        <span className={styles.recentMeta}>
+                          Mode: {order.transactionType ?? 'Delivery'}
+                        </span>
                         <span className={styles.recentItems}>
                           <strong>Items:</strong>{' '}
                           {order.items && order.items.length > 0
@@ -148,6 +153,9 @@ export default function OrderSearchPage() {
                       >
                         <span className={styles.recentId}>#{order.id.slice(-6)}</span>
                         <span className={styles.recentMeta}>{order.status}</span>
+                        <span className={styles.recentMeta}>
+                          Mode: {order.transactionType ?? 'Delivery'}
+                        </span>
                         <span className={styles.recentItems}>
                           <strong>Items:</strong>{' '}
                           {order.items && order.items.length > 0
