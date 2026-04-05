@@ -127,6 +127,9 @@ async function sendOrderEmail(params: {
         </table>
 
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 12px;">
+          <p style="margin: 0 0 15px 0; font-weight: bold; color: #333; text-align: center; background: #fff8e1; padding: 10px; border-radius: 8px;">
+            ⚠️ Our admin will call you shortly to confirm your delivery details.
+          </p>
           <div class="total-row">
             <span>Subtotal:</span>
             <span>${formatPeso(params.totalAmount)}</span>

@@ -98,7 +98,8 @@ export default function CheckoutPage() {
         <div className={styles.success}>
           <div className={styles.successIcon}>✨</div>
           <h1>Order Placed!</h1>
-          <p>Thank you for dining with Crave Corner. Your order is being prepared with love.</p>
+          <p>Thank you for choosing <strong>Cravings Ko</strong>. Your order is being prepared with love.</p>
+          <p className={styles.adminNote}>Please stay tuned! Our admin will call you shortly to confirm your delivery details.</p>
           <div className={styles.orderIdBox}>
             <span>Tracking Number:</span>
             <strong className={styles.idText}>{orderId}</strong>
