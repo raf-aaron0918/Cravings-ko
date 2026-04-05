@@ -259,6 +259,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json() as OrderRequestBody;
+    console.log('ORDER REQUEST BODY:', JSON.stringify(body, null, 2));
     const { customerName, customerEmail, customerAddress, customerContact, items, paymentMethod, transactionType } = body;
     const normalizedMethod = paymentMethod === 'cod' ? 'COD' : paymentMethod === 'qrph' ? 'QRPH' : null;
 
