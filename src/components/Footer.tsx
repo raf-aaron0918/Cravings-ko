@@ -19,7 +19,7 @@ export default function Footer() {
             <Image src="/uploads/facebook_icon.png" alt="Facebook" width={20} height={20} />
           </a>
           <a
-            href="https://www.instagram.com/cravings_ko"
+            href="https://www.instagram.com/cravingsko.official?igsh=MTVqdmFsYXo1cmphdA=="
             target="_blank"
             rel="noreferrer"
             aria-label="Instagram"
@@ -50,7 +50,7 @@ export default function Footer() {
         <h3 className={styles.brand}>Cravings Ko</h3>
         <p className={styles.tagline}>Snacks That Match Every Cravings</p>
         <p className={styles.address}>Blk 12 Lot 64, Ph 2, Spring Town, Bucal, Tanza, Cavite</p>
-        <a className={styles.contactLink} href="mailto:cravingsko18@gmail.com">cravingsko18@gmail.com</a>
+        <a className={styles.contactLink} href="mailto:cravingsko.official@gmail.com">cravingsko.official@gmail.com</a>
         <div className={styles.phones}>
           <a href="tel:+639656152690" className={styles.contactLink}>+63 965 615 2690</a>
         </div>

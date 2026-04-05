@@ -3,58 +3,42 @@ import styles from './page.module.css';
 import MenuPageClient from '@/components/MenuPageClient';
 
 export const metadata = {
-  title: 'Menu | Crave Corner',
+  title: 'Menu | Cravings Ko',
   description: 'Browse our handcrafted menu of cookies, cheese sticks, and lumpia.',
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // Revalidate every minute
 
 export default async function MenuPage() {
-  const sales = await prisma.orderItem.groupBy({
-    by: ['menuItemId'],
-    _sum: { quantity: true },
-    orderBy: { _sum: { quantity: 'desc' } },
-  });
+  // Optimize: Fetch all menu items and sales in fewer queries
+  const [sales, menuItems] = await Promise.all([
+    prisma.orderItem.groupBy({
+      by: ['menuItemId'],
+      _sum: { quantity: true },
+    }),
+    prisma.menuItem.findMany({
+      orderBy: [
+        { updatedAt: 'desc' },
+        { name: 'asc' },
+      ],
+    })
+  ]);
 
-  type Sale = (typeof sales)[number];
   const soldLookup = new Map<string, number>(
-    sales.map((item: Sale) => [item.menuItemId, item._sum.quantity ?? 0])
+    sales.map((item) => [item.menuItemId, item._sum.quantity ?? 0])
   );
-  const soldIds = sales.map((item: Sale) => item.menuItemId);
 
-  const soldItems = soldIds.length
-    ? await prisma.menuItem.findMany({
-        where: { id: { in: soldIds } },
-      })
-    : [];
+  // Determine Best Sellers by sorting by quantity
+  const itemsWithSales = menuItems.map(item => ({
+    ...item,
+    soldCount: soldLookup.get(item.id) ?? 0,
+  })).sort((a, b) => b.soldCount - a.soldCount);
 
-  type SoldItem = (typeof soldItems)[number];
-  const orderedSoldItems = soldIds
-    .map((id: Sale['menuItemId']) => soldItems.find((item: SoldItem) => item.id === id))
-    .filter((item: SoldItem | undefined): item is SoldItem => Boolean(item))
-    .map((item: SoldItem, index: number) => ({
-      ...item,
-      soldCount: soldLookup.get(item.id) ?? 0,
-      isBestSeller: index < 3 && (soldLookup.get(item.id) ?? 0) > 0,
-    }));
-
-  const unsoldItems = await prisma.menuItem.findMany({
-    where: soldIds.length ? { NOT: { id: { in: soldIds } } } : undefined,
-    orderBy: [
-      { updatedAt: 'desc' },
-      { name: 'asc' },
-    ],
-  });
-
-  type UnsoldItem = (typeof unsoldItems)[number];
-  const items = [
-    ...orderedSoldItems,
-    ...unsoldItems.map((item: UnsoldItem) => ({
-      ...item,
-      soldCount: 0,
-      isBestSeller: false,
-    })),
-  ];
+  // Tag top 3 as best sellers if they have sales
+  const processedItems = itemsWithSales.map((item, index) => ({
+    ...item,
+    isBestSeller: index < 3 && item.soldCount > 0
+  }));
 
   return (
     <main className={styles.main}>
@@ -63,7 +47,7 @@ export default async function MenuPage() {
         <p>Freshly prepared, lovingly served</p>
       </div>
       <div className="container">
-        <MenuPageClient items={items} />
+        <MenuPageClient items={processedItems} />
       </div>
     </main>
   );

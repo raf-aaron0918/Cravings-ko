@@ -44,8 +44,8 @@ export default function ContactPage() {
           <div className={styles.infoBlock}>
             <span className={styles.label}>Email</span>
             <h3>
-              <a href="mailto:cravingsko18@gmail.com" className={styles.link}>
-                cravingsko18@gmail.com
+              <a href="mailto:cravingsko.official@gmail.com" className={styles.link}>
+                cravingsko.official@gmail.com
               </a>
             </h3>
             <p>Send us inquiries for bulk orders, events, and menu requests.</p>
@@ -78,7 +78,7 @@ export default function ContactPage() {
                 <span>TikTok</span>
               </a>
               <a
-                href="https://www.instagram.com/cravings_ko"
+                href="https://www.instagram.com/cravingsko.official?igsh=MTVqdmFsYXo1cmphdA=="
                 target="_blank"
                 rel="noreferrer"
                 className={styles.socialLink}

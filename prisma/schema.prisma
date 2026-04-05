@@ -29,6 +29,7 @@ model MenuItem {
 model Order {
   id              String      @id @default(cuid())
   customerName    String
+  customerEmail   String?
   customerAddress String
   customerContact String
   totalAmount     Float

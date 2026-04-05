@@ -11,6 +11,7 @@ export default function CheckoutPage() {
 
   const [orderId, setOrderId] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'qrph'>('cod');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const feeConfig = {
     qrph: { rate: 0.0134, fixed: 0 },
@@ -34,11 +35,14 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const form = e.currentTarget;
     const data = new FormData(form);
     const selectedPayment = (data.get('paymentMethod') as 'cod' | 'qrph') || 'cod';
     const payload = {
       customerName: data.get('name') as string,
+      customerEmail: data.get('email') as string,
       customerAddress: data.get('address') as string,
       customerContact: data.get('contact') as string,
       paymentMethod: selectedPayment,
@@ -47,6 +51,7 @@ export default function CheckoutPage() {
     const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!res.ok) {
       alert('Something went wrong. Please try again.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -71,6 +76,7 @@ export default function CheckoutPage() {
       if (!checkoutRes.ok) {
         const detail = checkout?.error ? ` (${checkout.error})` : '';
         alert(`Online checkout failed${detail}. Please try again or choose Cash on Delivery.`);
+        setIsSubmitting(false);
         return;
       }
 
@@ -165,6 +171,9 @@ export default function CheckoutPage() {
             <label>Full Name
               <input name="name" type="text" required placeholder="e.g. Maria Santos" />
             </label>
+            <label>Email Address
+              <input name="email" type="email" required placeholder="e.g. maria@example.com" />
+            </label>
             <label>Address
               <textarea name="address" required placeholder="123 Café Street, Old Town" rows={3} />
             </label>
@@ -193,7 +202,7 @@ export default function CheckoutPage() {
                         <strong className={styles.money}>{formatPeso(cartTotal)}</strong>
                       </div>
                       <p className={styles.paymentHint}>
-                        Pay the exact total to the rider upon delivery.
+                        Pay the exact total amount upon delivery.
                       </p>
                     </div>
                   )}
@@ -232,12 +241,12 @@ export default function CheckoutPage() {
                 </label>
               </div>
             </div>
-            <button type="submit" className={styles.orderBtn}>Place Order ✓</button>
+            <button type="submit" className={styles.orderBtn} disabled={isSubmitting}>
+              {isSubmitting ? ' Placing Order...' : 'Place Order ✓'}
+            </button>
           </form>
         </div>
       </div>
     </main> 
   ); 
 }
-
-

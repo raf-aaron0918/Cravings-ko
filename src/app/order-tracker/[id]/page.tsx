@@ -71,8 +71,8 @@ export default function OrderTrackerPage() {
   const canCancel = order.status === 'PENDING' && order.paymentStatus !== 'PAID';
 
   const paymentMethodLabel = (() => {
-    if (order.paymentMethod === 'COD') return 'Cash on Delivery';
-    if (order.paymentMethod === 'QRPH') return 'QR Ph';
+    if (order.paymentMethod === 'COD') return 'COD';
+    if (order.paymentMethod === 'QRPH') return 'QRPH';
     return 'Unknown';
   })();
 
@@ -163,11 +163,11 @@ export default function OrderTrackerPage() {
               ))}
             </div>
             <div className={styles.total}>
-              <span>Total Amount</span>
+              <span>Total Amount :</span>
               <span className={styles.money}>{formatPeso(order.totalAmount)}</span>
             </div>
             <div className={styles.total}>
-              <span>Payment Method</span>
+              <span>Payment Method :</span>
               <span>{paymentMethodLabel}</span>
             </div>
             {order.paymentStatus === 'PAID' && order.paymentReference && (
