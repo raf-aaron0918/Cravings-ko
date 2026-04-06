@@ -50,7 +50,7 @@ async function sendOrderEmail(params: {
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
             <td width="80" style="vertical-align: top;">
-              ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}" width="70" height="70" style="border-radius: 8px; object-fit: cover; display: block;" />` : `<div style="width: 70px; height: 70px; background: #f0f0f0; border-radius: 8px;"></div>`}
+              ${item.imageUrl ? `<img src="${item.imageUrl.startsWith('http') ? item.imageUrl : `${siteUrl}${item.imageUrl}`}" alt="${item.name}" width="70" height="70" style="border-radius: 8px; object-fit: cover; display: block;" />` : `<div style="width: 70px; height: 70px; background: #f0f0f0; border-radius: 8px;"></div>`}
             </td>
             <td style="padding-left: 15px; vertical-align: middle;">
               <div style="font-size: 16px; font-weight: 600; color: #333333; margin-bottom: 4px;">${item.name}</div>
