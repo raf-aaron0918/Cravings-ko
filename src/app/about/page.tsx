@@ -3,7 +3,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'About Us | Crave Corner',
+  title: 'About Us | Cravings Ko',
   description: 'Our story and passion for handcrafted food.',
 };
 

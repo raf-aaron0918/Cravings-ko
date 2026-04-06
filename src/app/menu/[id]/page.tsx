@@ -22,8 +22,8 @@ const CATEGORY_LABELS: Record<string, string> = {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const item = await prisma.menuItem.findUnique({ where: { id } });
-  if (!item) return { title: 'Not Found | Crave Corner' };
-  return { title: `${item.name} | Crave Corner`, description: item.description };
+  if (!item) return { title: 'Not Found | Cravings Ko' };
+  return { title: `${item.name} | Cravings Ko`, description: item.description };
 }
 
 export const revalidate = 30;

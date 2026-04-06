@@ -2,7 +2,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'Contact | Crave Corner',
+  title: 'Contact | Cravings Ko',
   description: 'Get in touch with us.',
 };
 
