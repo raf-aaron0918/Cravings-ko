@@ -208,7 +208,7 @@ Track your order: ${siteUrl}/order-tracker/${params.orderId}
           <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px;">Customer Details</h3>
           <p style="margin: 5px 0;"><strong>Name:</strong> ${params.customerName}</p>
           <p style="margin: 5px 0;"><strong>Phone:</strong> ${params.customerContact}</p>
-          <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${params.customerEmail}">${params.customerEmail}</a></p>
+          <p style="margin: 5px 0;"><strong>Email:</strong> ${params.customerEmail}</p>
           <p style="margin: 5px 0;"><strong>Address:</strong> ${params.customerAddress}</p>
 
           <h3 style="margin-top: 25px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px;">Order Items</h3>
