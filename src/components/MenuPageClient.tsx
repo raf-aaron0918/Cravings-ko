@@ -62,7 +62,7 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
               <div className={styles.grid}>
                 {groupedItems[category].map(item => (
                   <div key={item.id} className={`${styles.card} handcrafted-border`}>
-                    <Link href={`/menu/${item.id}`} className={styles.cardLink}>
+                    <Link href={`/menu/${item.id}`} className={styles.cardLink} prefetch={false}>
                       <div className={styles.imageBox}>
                         {(() => {
                           const rawSrc = item.thumbnailUrl || item.imageUrl;
@@ -95,7 +95,7 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                     </Link>
                     <div className={styles.cardBody}>
                       <h3 className={styles.itemName}>
-                        <Link href={`/menu/${item.id}`}>{item.name}</Link>
+                        <Link href={`/menu/${item.id}`} prefetch={false}>{item.name}</Link>
                       </h3>
                       <div className={styles.ratingRow}>
                         <StarRating rating={item.rating ?? 0} />

@@ -79,7 +79,7 @@ export default async function HomePage() {
           ) : (
             displayItems.map((item: MenuItem) => (
               <div key={item.id} className={`${styles.card} handcrafted-border`}>
-                <Link href={`/menu/${item.id}`} className={styles.cardLink}>
+                <Link href={`/menu/${item.id}`} className={styles.cardLink} prefetch={false}>
                   <div className={styles.imagePlaceholder}>
                     {item.imageUrl ? (
                       <img src={item.imageUrl} alt={item.name} />
@@ -94,7 +94,7 @@ export default async function HomePage() {
                   </div>
                 </Link>
                 <div className={styles.cardBody}>
-                  <h3><Link href={`/menu/${item.id}`}>{item.name}</Link></h3>
+                  <h3><Link href={`/menu/${item.id}`} prefetch={false}>{item.name}</Link></h3>
                   <div className={styles.ratingRow}>
                     <StarRating rating={item.rating ?? 0} />
                     <span className={styles.ratingCount}>({item.reviewCount ?? 0})</span>
