@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { formatPeso } from '@/lib/currency';
+import { revalidatePath } from 'next/cache';
 
 import { cookies } from 'next/headers';
 
@@ -396,6 +397,9 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.warn('Order email failed:', error);
     }
+
+    revalidatePath('/');
+    revalidatePath('/menu');
 
     return NextResponse.json(order, { status: 201 });
   } catch (e: unknown) {
