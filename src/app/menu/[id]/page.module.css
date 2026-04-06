@@ -218,6 +218,84 @@
   color: var(--color-wood);
 }
 
+.reviews {
+  margin-top: 2rem;
+  border-top: 1px solid var(--color-wood);
+  padding-top: 2rem;
+}
+
+.reviews h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.noReviews {
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.reviewCard {
+  background: transparent;
+  border: 1px dashed rgba(140, 107, 93, 0.5);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.reviewerName {
+  font-weight: 700;
+  color: var(--color-wood);
+}
+
+.reviewDate {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.reviewRating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.reviewScore {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-wood);
+}
+
+.reviewText {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.reviewDetails {
+  margin-top: 1rem;
+}
+
+.reviewSummary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--color-wood);
+  text-decoration: underline;
+}
+
 /* --- Tablet & Desktop Overrides --- */
 @media (min-width: 800px) {
   .main { padding: 4rem 2rem; }

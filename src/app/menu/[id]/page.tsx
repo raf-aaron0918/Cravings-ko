@@ -28,6 +28,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const reviewWhere = {
+    items: { some: { menuItemId: id } },
+    OR: [{ rating: { not: null } }, { feedback: { not: null } }],
+  };
   const bestSellers = await prisma.orderItem.groupBy({
     by: ['menuItemId'],
     _sum: { quantity: true },
@@ -40,11 +44,30 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     where: { id },
     include: { _count: { select: { orderItems: true } } },
   });
+  const reviewCount = await prisma.order.count({ where: reviewWhere });
+  const reviews = await prisma.order.findMany({
+    where: reviewWhere,
+    orderBy: { createdAt: 'desc' },
+    take: Math.max(3, Math.min(reviewCount, 12)),
+    select: {
+      id: true,
+      customerName: true,
+      rating: true,
+      feedback: true,
+      createdAt: true,
+    },
+  });
 
   if (!item) notFound();
 
   const displayCategory = CATEGORY_LABELS[item.category] ?? item.category;
   const isBestSeller = bestSellerIds.has(item.id);
+  const maskName = (name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return 'Customer';
+    if (trimmed.length <= 2) return `${trimmed[0]}*`;
+    return `${trimmed[0]}${'*'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
+  };
 
   return (
     <main className={styles.main}>
@@ -104,6 +127,50 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <p>{item.details}</p>
               </div>
             )}
+            <div className={styles.reviews}>
+              <h3>Customer Reviews</h3>
+              {reviewCount === 0 ? (
+                <p className={styles.noReviews}>No reviews yet. Be the first to leave one!</p>
+              ) : (
+                <>
+                  <div className={styles.reviewList}>
+                    {reviews.slice(0, 3).map(review => (
+                      <div key={review.id} className={styles.reviewCard}>
+                        <div className={styles.reviewHeader}>
+                          <span className={styles.reviewerName}>{maskName(review.customerName)}</span>
+                          <span className={styles.reviewDate}>{new Date(review.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div className={styles.reviewRating}>
+                          <StarRating rating={review.rating ?? 0} />
+                          <span className={styles.reviewScore}>{review.rating ? `${review.rating}/5` : 'No rating'}</span>
+                        </div>
+                        {review.feedback && <p className={styles.reviewText}>&ldquo;{review.feedback}&rdquo;</p>}
+                      </div>
+                    ))}
+                  </div>
+                  {reviewCount > 3 && (
+                    <details className={styles.reviewDetails}>
+                      <summary className={styles.reviewSummary}>See more reviews ({reviewCount - 3})</summary>
+                      <div className={styles.reviewList}>
+                        {reviews.slice(3).map(review => (
+                          <div key={review.id} className={styles.reviewCard}>
+                            <div className={styles.reviewHeader}>
+                              <span className={styles.reviewerName}>{maskName(review.customerName)}</span>
+                              <span className={styles.reviewDate}>{new Date(review.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div className={styles.reviewRating}>
+                              <StarRating rating={review.rating ?? 0} />
+                              <span className={styles.reviewScore}>{review.rating ? `${review.rating}/5` : 'No rating'}</span>
+                            </div>
+                            {review.feedback && <p className={styles.reviewText}>&ldquo;{review.feedback}&rdquo;</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

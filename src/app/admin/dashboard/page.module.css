@@ -104,6 +104,12 @@
   letter-spacing: 0;
 }
 
+.sectionSep {
+  font-family: var(--font-lora), serif;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
 .collapsibleHeader {
   display: flex;
   justify-content: space-between;

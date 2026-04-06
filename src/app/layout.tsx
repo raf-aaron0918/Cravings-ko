@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { CartProvider } from '@/components/CartProvider'
+import MessengerFab from '@/components/MessengerFab'
 
 const lora = Lora({ subsets: ['latin'], variable: '--font-lora' })
 const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat' })
@@ -30,6 +31,7 @@ export default function RootLayout({
           <Navbar />
           <div className="page-content">{children}</div>
           <Footer />
+          <MessengerFab />
         </CartProvider>
       </body>
     </html>

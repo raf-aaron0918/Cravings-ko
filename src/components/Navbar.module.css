@@ -59,7 +59,8 @@
   position: fixed;
   top: 0;
   left: -100%;
-  width: 70%;
+  width: 55%;
+  max-width: 360px;
   height: 100vh;
   background: var(--color-paper);
   z-index: 1050;
@@ -81,10 +82,25 @@
 
 .navLinks a {
   font-family: var(--font-lora), serif;
-  font-size: 1.2rem;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-ink);
+}
+
+@media (max-width: 767px) {
+  .menuOverlay {
+    padding: 4rem 1.1rem;
+  }
+
+  .navLinks {
+    gap: 0.6rem;
+  }
+
+  .navLinks a {
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+  }
 }
 
 .actions {

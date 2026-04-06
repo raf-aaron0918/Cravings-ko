@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from './CartProvider';
@@ -8,13 +8,32 @@ import styles from './Navbar.module.css';
 export default function Navbar() {
   const { items } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const closeMenu = () => setIsOpen(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleOutside = (event: MouseEvent | TouchEvent) => {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside);
+    };
+  }, [isOpen]);
+
   return (
     <nav className={styles.navbar}>
-      <div className={styles.navContainer}>
+      <div className={styles.navContainer} ref={menuRef}>
         {/* Hamburger Icon */}
         <button 
           className={styles.hamburger} 

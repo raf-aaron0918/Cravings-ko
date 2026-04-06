@@ -85,6 +85,9 @@ export default function OrderSearchPage() {
 
   const todayOrders = recentOrders.filter(order => isToday(order.createdAt));
   const recentOnlyOrders = recentOrders.filter(order => !isToday(order.createdAt));
+  const activeOrders = recentOrders.filter(order => !['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(order.status));
+  const todayNonActive = todayOrders.filter(order => ['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(order.status));
+  const recentNonActive = recentOnlyOrders.filter(order => ['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(order.status));
 
   return (
     <main className={styles.main}>
@@ -110,11 +113,11 @@ export default function OrderSearchPage() {
           {!loadingRecent && recentOrders.length > 0 && (
             <div className={styles.recentSection}>
               <h2 className={styles.recentTitle}>Recent Orders on This Device</h2>
-              {todayOrders.length > 0 && (
+              {activeOrders.length > 0 && (
                 <div className={styles.recentGroup}>
-                  <h3 className={styles.groupTitle}>Today</h3>
+                  <h3 className={styles.groupTitle}>Active Orders</h3>
                   <div className={styles.recentList}>
-                    {todayOrders.map(order => (
+                    {activeOrders.map(order => (
                       <button
                         key={order.id}
                         type="button"
@@ -140,11 +143,41 @@ export default function OrderSearchPage() {
                   </div>
                 </div>
               )}
-              {recentOnlyOrders.length > 0 && (
+              {todayNonActive.length > 0 && (
+                <div className={styles.recentGroup}>
+                  <h3 className={styles.groupTitle}>Today</h3>
+                  <div className={styles.recentList}>
+                    {todayNonActive.map(order => (
+                      <button
+                        key={order.id}
+                        type="button"
+                        className={styles.recentCard}
+                        onClick={() => router.push(`/order-tracker/${order.id}`)}
+                      >
+                        <span className={styles.recentId}>#{order.id.slice(-6)}</span>
+                        <span className={styles.recentMeta}>{order.status}</span>
+                        <span className={styles.recentMeta}>
+                          Mode: {order.transactionType ?? 'Delivery'}
+                        </span>
+                        <span className={styles.recentItems}>
+                          <strong>Items:</strong>{' '}
+                          {order.items && order.items.length > 0
+                            ? order.items.map(item => `${item.quantity}x ${item.menuItem.name}`).join(', ')
+                            : 'No items found'}
+                        </span>
+                        <span className={styles.recentMeta}>
+                          {new Date(order.createdAt).toLocaleString()}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {recentNonActive.length > 0 && (
                 <div className={styles.recentGroup}>
                   <h3 className={styles.groupTitle}>Recently</h3>
                   <div className={styles.recentList}>
-                    {recentOnlyOrders.map(order => (
+                    {recentNonActive.map(order => (
                       <button
                         key={order.id}
                         type="button"

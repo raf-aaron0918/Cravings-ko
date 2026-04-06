@@ -141,15 +141,15 @@
 
 .pkgBadgeOverlay {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0.5rem;
+  right: 0.5rem;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(4px);
   border: 1px solid var(--color-wood);
   color: var(--color-wood);
-  padding: 0.25rem 0.65rem;
+  padding: 0.16rem 0.42rem;
   border-radius: 999px;
-  font-size: 0.72rem;
+  font-size: 0.56rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -270,10 +270,10 @@
   }
 
   .pkgBadgeOverlay {
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.65rem;
+    top: 0.4rem;
+    right: 0.4rem;
+    padding: 0.14rem 0.38rem;
+    font-size: 0.52rem;
   }
 
   .card h3 a {
@@ -413,10 +413,10 @@
   .imagePlaceholder { height: 300px; }
 
   .pkgBadgeOverlay {
-    top: 1rem;
-    right: 1rem;
-    padding: 0.35rem 0.9rem;
-    font-size: 0.85rem;
+    top: 0.7rem;
+    right: 0.7rem;
+    padding: 0.22rem 0.6rem;
+    font-size: 0.68rem;
   }
 
   .desc { font-size: 0.9rem; margin: 0.45rem 0 0.75rem; -webkit-line-clamp: 2; }

@@ -223,7 +223,8 @@ export default function AdminDashboard() {
       <section className={styles.section}>
         <div className={styles.collapsibleHeader} onClick={() => setShowCompleted(!showCompleted)}>
           <h2 className={styles.sectionTitle}>
-            Completed / Cancelled <span className={styles.sectionCount}>({completedOrders.length})</span>
+            Completed <span className={styles.sectionSep}>/</span> Cancelled{' '}
+            <span className={styles.sectionCount}>({completedOrders.length})</span>
           </h2>
           <span className={styles.toggleIcon}>{showCompleted ? '−' : '+'}</span>
         </div>

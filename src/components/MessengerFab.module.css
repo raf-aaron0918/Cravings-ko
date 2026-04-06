@@ -1,0 +1,66 @@
+.fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1200;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: var(--color-wood);
+  color: var(--color-bg);
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, width 0.2s ease;
+  overflow: hidden;
+  gap: 0.55rem;
+  padding: 0 0.95rem;
+}
+
+.fab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.26);
+}
+
+.icon {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: url("/uploads/chat-icon.png") center / contain no-repeat;
+  flex: 0 0 auto;
+}
+
+.label {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 1;
+}
+
+.expanded {
+  width: 210px;
+  justify-content: flex-start;
+}
+
+
+@media (max-width: 600px) {
+  .fab {
+    right: 0.9rem;
+    bottom: 2.2rem;
+    width: 52px;
+    height: 52px;
+  }
+
+  .icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .expanded {
+    width: 200px;
+  }
+}
