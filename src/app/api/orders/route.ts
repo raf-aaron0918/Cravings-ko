@@ -128,7 +128,7 @@ async function sendOrderEmail(params: {
 
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 12px;">
           <p style="margin: 0 0 15px 0; font-weight: bold; color: #333; text-align: center; background: #fff8e1; padding: 10px; border-radius: 8px;">
-            ⚠️ Our admin will call you shortly to confirm your delivery details.
+            ⚠️ Our admin will contact you shortly to confirm your delivery details.
           </p>
           <div class="total-row">
             <span>Subtotal:</span>
@@ -157,6 +157,20 @@ async function sendOrderEmail(params: {
     </html>
   `;
 
+  const text = `Cravings Ko
+
+Hi ${params.customerName.split(' ')[0]},
+
+We got your order!
+
+Order ID: ${params.orderId}
+Subtotal: ${formatPeso(params.totalAmount)}
+Transaction Mode: ${params.transactionType || 'DELIVERY'}
+Total Paid: ${formatPeso(params.totalAmount)}
+
+Track your order: ${siteUrl}/order-tracker/${params.orderId}
+`;
+
   const recipients = [params.customerEmail];
   // if (adminTo) recipients.push(adminTo); // We'll send separately now
 
@@ -173,6 +187,7 @@ async function sendOrderEmail(params: {
       reply_to: adminTo, // Direct replies back to the admin!
       subject: `Order Confirmation — ${params.orderId.slice(-6)}`,
       html,
+      text,
     }),
   });
 
@@ -213,6 +228,24 @@ async function sendOrderEmail(params: {
         </div>
       </div>
     `;
+    const adminText = `New Order Received!
+Order ID: ${params.orderId}
+
+Customer Details
+Name: ${params.customerName}
+Phone: ${params.customerContact}
+Email: ${params.customerEmail}
+Address: ${params.customerAddress}
+
+Order Items
+${params.items.map(item => `${item.quantity}x ${item.name} — ${formatPeso(item.lineTotal)}`).join('\n')}
+
+Payment Method: ${paymentText}
+Transaction Mode: ${params.transactionType || 'DELIVERY'}
+Total Amount: ${formatPeso(params.totalAmount)}
+
+View in dashboard: ${siteUrl}/admin/dashboard
+`;
 
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -225,6 +258,7 @@ async function sendOrderEmail(params: {
         to: [adminTo],
         subject: `New Order: ${params.customerName} — ${params.orderId.slice(-6)}`,
         html: adminHtml,
+        text: adminText,
       }),
     });
   }
