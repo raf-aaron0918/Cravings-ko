@@ -119,7 +119,7 @@ async function sendOrderEmail(params: {
             </td>
             <td width="50%">
               <div class="label">Email:</div>
-              <div class="value"><a href="mailto:${params.customerEmail}" style="color: #0066cc;">${params.customerEmail}</a></div>
+              <div class="value">${params.customerEmail}</div>
               <div style="margin-top: 15px;" class="label">Address:</div>
               <div class="value">${params.customerAddress}</div>
             </td>
