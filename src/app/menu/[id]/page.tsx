@@ -26,37 +26,41 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title: `${item.name} | Crave Corner`, description: item.description };
 }
 
+export const revalidate = 30;
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const reviewWhere = {
     items: { some: { menuItemId: id } },
     OR: [{ rating: { not: null } }, { feedback: { not: null } }],
   };
-  const bestSellers = await prisma.orderItem.groupBy({
-    by: ['menuItemId'],
-    _sum: { quantity: true },
-    orderBy: { _sum: { quantity: 'desc' } },
-    take: 3,
-  });
-  const bestSellerIds = new Set(bestSellers.map(entry => entry.menuItemId));
 
-  const item = await prisma.menuItem.findUnique({
-    where: { id },
-    include: { _count: { select: { orderItems: true } } },
-  });
-  const reviewCount = await prisma.order.count({ where: reviewWhere });
-  const reviews = await prisma.order.findMany({
-    where: reviewWhere,
-    orderBy: { createdAt: 'desc' },
-    take: Math.max(3, Math.min(reviewCount, 12)),
-    select: {
-      id: true,
-      customerName: true,
-      rating: true,
-      feedback: true,
-      createdAt: true,
-    },
-  });
+  const [bestSellers, item, reviews] = await Promise.all([
+    prisma.orderItem.groupBy({
+      by: ['menuItemId'],
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 3,
+    }),
+    prisma.menuItem.findUnique({
+      where: { id },
+      include: { _count: { select: { orderItems: true } } },
+    }),
+    prisma.order.findMany({
+      where: reviewWhere,
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+      select: {
+        id: true,
+        customerName: true,
+        rating: true,
+        feedback: true,
+        createdAt: true,
+      },
+    }),
+  ]);
+
+  const bestSellerIds = new Set(bestSellers.map(entry => entry.menuItemId));
 
   if (!item) notFound();
 
@@ -129,7 +133,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             )}
             <div className={styles.reviews}>
               <h3>Customer Reviews</h3>
-              {reviewCount === 0 ? (
+              {reviews.length === 0 ? (
                 <p className={styles.noReviews}>No reviews yet. Be the first to leave one!</p>
               ) : (
                 <>
@@ -148,9 +152,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                       </div>
                     ))}
                   </div>
-                  {reviewCount > 3 && (
+                  {reviews.length > 3 && (
                     <details className={styles.reviewDetails}>
-                      <summary className={styles.reviewSummary}>See more reviews ({reviewCount - 3})</summary>
+                      <summary className={styles.reviewSummary}>See more reviews</summary>
                       <div className={styles.reviewList}>
                         {reviews.slice(3).map(review => (
                           <div key={review.id} className={styles.reviewCard}>
