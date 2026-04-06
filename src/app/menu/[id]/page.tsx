@@ -54,7 +54,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           <div className={styles.imageSection}>
             {item.imageUrl ? (
               <Image
-                src={item.imageUrl}
+                src={item.imageUrl.startsWith('/') ? item.imageUrl : `/${item.imageUrl.replace(/^public\//, '')}`}
                 alt={item.name}
                 className={styles.image}
                 width={900}

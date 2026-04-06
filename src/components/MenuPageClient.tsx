@@ -64,9 +64,16 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                   <div key={item.id} className={`${styles.card} handcrafted-border`}>
                     <Link href={`/menu/${item.id}`} className={styles.cardLink}>
                       <div className={styles.imageBox}>
-                        {item.thumbnailUrl || item.imageUrl ? (
+                        {(() => {
+                          const rawSrc = item.thumbnailUrl || item.imageUrl;
+                          const normalizedSrc = rawSrc
+                            ? rawSrc.startsWith('/')
+                              ? rawSrc
+                              : `/${rawSrc.replace(/^public\//, '')}`
+                            : null;
+                          return normalizedSrc ? (
                           <Image
-                            src={(item.thumbnailUrl || item.imageUrl) as string}
+                            src={normalizedSrc}
                             alt={item.name}
                             fill
                             sizes="(max-width: 1024px) 50vw, 33vw"
@@ -75,9 +82,10 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                             decoding="async"
                             unoptimized
                           />
-                        ) : (
+                          ) : (
                           <span>No image</span>
-                        )}
+                          );
+                        })()}
                         {item.packagingPieces && item.packagingType && (
                           <span className={styles.packagingBadge}>
                             {item.packagingPieces}pcs/{item.packagingType.toLowerCase()}
