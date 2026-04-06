@@ -13,6 +13,7 @@ model MenuItem {
   details     String?
   price       Float
   imageUrl    String?
+  thumbnailUrl String?
   category    String      // e.g. Meals, Drinks, Desserts
   isFeatured  Boolean     @default(false)
   outOfStock  Boolean     @default(false)

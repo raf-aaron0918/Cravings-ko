@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import { Prisma } from '@prisma/client';
+import sharp from 'sharp';
 
 import { cookies } from 'next/headers';
 
@@ -44,21 +45,64 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const packagingPiecesStr = formData.get('packagingPieces') as string | null;
     const packagingPieces = packagingPiecesStr ? parseInt(packagingPiecesStr, 10) : null;
     const file = formData.get('file') as File | null;
+    const MAX_IMAGE_BYTES = 30 * 1024 * 1024;
 
     const currentItem = await prisma.menuItem.findUnique({ where: { id } });
     let imageUrl = currentItem?.imageUrl;
+    let thumbnailUrl = currentItem?.thumbnailUrl;
 
     if (isFeatured && !(await canFeatureAnotherItem(id))) {
       return NextResponse.json({ error: 'Only 2 specialties can be shown on the home page.' }, { status: 400 });
     }
 
     if (file) {
+      if (file.size > MAX_IMAGE_BYTES) {
+        return NextResponse.json(
+          { error: 'Image too large. Please upload a file under 25 MB.' },
+          { status: 400 }
+        );
+      }
+      const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+      if (file.type === 'image/heic' || file.type === 'image/heif') {
+        return NextResponse.json(
+          { error: 'HEIC images are not supported. Please upload JPG or PNG.' },
+          { status: 400 }
+        );
+      }
+      if (file.type && !allowedTypes.has(file.type)) {
+        return NextResponse.json(
+          { error: 'Unsupported image type. Please upload JPG, PNG, or WebP.' },
+          { status: 400 }
+        );
+      }
+
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const safeBase = file.name.replace(/\s+/g, '-').replace(/\.[^.]+$/, '');
+      const baseName = `${Date.now()}-${safeBase}`;
+      const filename = `${baseName}.webp`;
+      const thumbFilename = `${baseName}-thumb.webp`;
       const uploadPath = path.join(process.cwd(), 'public', 'uploads', filename);
-      await writeFile(uploadPath, buffer);
+      const thumbPath = path.join(process.cwd(), 'public', 'uploads', thumbFilename);
+
+      if (file.type.startsWith('image/')) {
+        const optimized = await sharp(buffer, { limitInputPixels: 268402689 })
+          .rotate()
+          .resize({ width: 1800, withoutEnlargement: true })
+          .webp({ quality: 82 })
+          .toBuffer();
+        const thumbnail = await sharp(buffer, { limitInputPixels: 268402689 })
+          .rotate()
+          .resize({ width: 480, withoutEnlargement: true })
+          .webp({ quality: 70 })
+          .toBuffer();
+        await writeFile(uploadPath, optimized);
+        await writeFile(thumbPath, thumbnail);
+      } else {
+        await writeFile(uploadPath, buffer);
+      }
       imageUrl = `/uploads/${filename}`;
+      thumbnailUrl = `/uploads/${thumbFilename}`;
     }
 
     const item = await prisma.menuItem.update({
@@ -69,6 +113,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         details,
         price: parseFloat(price),
         imageUrl,
+        thumbnailUrl,
         category,
         isFeatured,
         outOfStock,

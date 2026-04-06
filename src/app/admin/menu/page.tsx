@@ -12,6 +12,7 @@ type MenuItem = {
   details?: string | null;
   price: number;
   imageUrl: string | null;
+  thumbnailUrl?: string | null;
   category: string;
   isFeatured: boolean;
   outOfStock?: boolean;

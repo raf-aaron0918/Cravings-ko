@@ -13,6 +13,7 @@ type MenuItem = {
   description: string;
   price: number;
   imageUrl: string | null;
+  thumbnailUrl?: string | null;
   category: string;
   rating?: number;
   reviewCount?: number;
@@ -63,12 +64,15 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                   <div key={item.id} className={`${styles.card} handcrafted-border`}>
                     <Link href={`/menu/${item.id}`} className={styles.cardLink}>
                       <div className={styles.imageBox}>
-                        {item.imageUrl ? (
+                        {item.thumbnailUrl || item.imageUrl ? (
                           <Image
-                            src={item.imageUrl}
+                            src={(item.thumbnailUrl || item.imageUrl) as string}
                             alt={item.name}
                             fill
                             sizes="(max-width: 1024px) 50vw, 33vw"
+                            loading="eager"
+                            quality={60}
+                            decoding="async"
                             unoptimized
                           />
                         ) : (

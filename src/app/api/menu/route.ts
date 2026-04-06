@@ -107,6 +107,7 @@ export async function POST(req: NextRequest) {
     }
 
     let imageUrl = null;
+    let thumbnailUrl = null;
     if (file) {
       if (file.size > MAX_IMAGE_BYTES) {
         return NextResponse.json(
@@ -131,8 +132,11 @@ export async function POST(req: NextRequest) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const safeBase = file.name.replace(/\s+/g, '-').replace(/\.[^.]+$/, '');
-      const filename = `${Date.now()}-${safeBase}.webp`;
+      const baseName = `${Date.now()}-${safeBase}`;
+      const filename = `${baseName}.webp`;
+      const thumbFilename = `${baseName}-thumb.webp`;
       const uploadPath = path.join(process.cwd(), 'public', 'uploads', filename);
+      const thumbPath = path.join(process.cwd(), 'public', 'uploads', thumbFilename);
 
       if (file.type.startsWith('image/')) {
         try {
@@ -141,7 +145,13 @@ export async function POST(req: NextRequest) {
             .resize({ width: 1800, withoutEnlargement: true })
             .webp({ quality: 82 })
             .toBuffer();
+          const thumbnail = await sharp(buffer, { limitInputPixels: 268402689 })
+            .rotate()
+            .resize({ width: 480, withoutEnlargement: true })
+            .webp({ quality: 70 })
+            .toBuffer();
           await writeFile(uploadPath, optimized);
+          await writeFile(thumbPath, thumbnail);
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Image processing failed';
           return NextResponse.json({ error: msg }, { status: 500 });
@@ -151,6 +161,7 @@ export async function POST(req: NextRequest) {
       }
 
       imageUrl = `/uploads/${filename}`;
+      thumbnailUrl = `/uploads/${thumbFilename}`;
     }
 
     const item = await prisma.menuItem.create({
@@ -160,6 +171,7 @@ export async function POST(req: NextRequest) {
         details,
         price: parseFloat(price),
         imageUrl,
+        thumbnailUrl,
         category,
         isFeatured,
         outOfStock,

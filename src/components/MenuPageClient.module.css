@@ -51,11 +51,15 @@
   border-radius: 18px;
   box-shadow: 0 16px 28px rgba(67, 33, 16, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  content-visibility: auto;
+  contain-intrinsic-size: 320px 420px;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 36px rgba(67, 33, 16, 0.16);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 36px rgba(67, 33, 16, 0.16);
+  }
 }
 
 .actions {
@@ -191,6 +195,11 @@
 }
 
 @media (max-width: 420px) {
+  .card {
+    box-shadow: 0 10px 20px rgba(67, 33, 16, 0.1);
+    contain-intrinsic-size: 260px 360px;
+  }
+
   .cardBody {
     padding: 0.65rem;
   }
