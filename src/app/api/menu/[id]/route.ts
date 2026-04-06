@@ -4,6 +4,7 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 import { Prisma } from '@prisma/client';
 import sharp from 'sharp';
+import { revalidatePath } from 'next/cache';
 
 import { cookies } from 'next/headers';
 
@@ -182,6 +183,8 @@ export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id:
       prisma.orderItem.deleteMany({ where: { menuItemId: id } }),
       prisma.menuItem.delete({ where: { id } }),
     ]);
+    revalidatePath('/');
+    revalidatePath('/menu');
     return NextResponse.json({ success: true });
   } catch (e: unknown) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2003') {
