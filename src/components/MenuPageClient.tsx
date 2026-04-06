@@ -69,6 +69,7 @@ export default function MenuPageClient({ items }: { items: MenuItem[] }) {
                             alt={item.name}
                             fill
                             sizes="(max-width: 1024px) 50vw, 33vw"
+                            unoptimized
                           />
                         ) : (
                           <span>No image</span>

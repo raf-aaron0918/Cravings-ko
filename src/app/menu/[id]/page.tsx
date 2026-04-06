@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import styles from './page.module.css';
 import AddToCartButton from '@/components/AddToCartButton';
+import BuyNowButton from '@/components/BuyNowButton';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -60,6 +61,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 height={600}
                 sizes="(max-width: 768px) 100vw, 60vw"
                 priority
+                loading="eager"
+                unoptimized
               />
             ) : (
               <div className={styles.placeholder}>{displayCategory}</div>
@@ -88,13 +91,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
               <div className={styles.buyButtonWrap}>
-                <AddToCartButton item={item} />
+                <div className={styles.buttonGroup}>
+                  <AddToCartButton item={item} />
+                  <BuyNowButton item={item} />
+                </div>
               </div>
             </div>
             <p className={styles.description}>{item.description}</p>
             {item.details && (
               <div className={styles.details}>
-                <h3>Cooking Instruction</h3>
+                <h3>Product Details</h3>
                 <p>{item.details}</p>
               </div>
             )}
