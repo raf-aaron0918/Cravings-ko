@@ -29,10 +29,8 @@ export default function AboutPage() {
         <div className={styles.heroInner}>
           <span className={styles.eyebrow}>About</span>
           <h1>Made with memory, warmth, and everyday comfort.</h1>
-          <p>
-            Cravings Ko started with familiar snacks, homemade sweets, and the goal of
-            serving food that feels personal from the first bite.
-          </p>
+
+        
         </div>
       </section>
 

@@ -78,6 +78,9 @@ export default function OrderTrackerPage() {
   })();
 
   const handleCancelOrder = async () => {
+    const confirmed = window.confirm('Cancel this order? This cannot be undone.');
+    if (!confirmed) return;
+
     setCancelling(true);
     const res = await fetch(`/api/orders/${id}`, {
       method: 'PATCH',

@@ -129,6 +129,7 @@ export default function AdminDashboard() {
   })();
 
   const salesByProduct = completedOrders
+    .filter(o => o.status === 'COMPLETED')
     .filter(o => new Date(o.createdAt) >= rangeStart)
     .reduce<Record<string, { name: string; qty: number; revenue: number; lastSold: string }>>((acc, order) => {
       order.items.forEach(item => {
