@@ -37,62 +37,67 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const selectedPayment = (data.get('paymentMethod') as 'cod' | 'qrph') || 'cod';
-    const payload = {
-      customerName: data.get('name') as string,
-      customerEmail: data.get('email') as string,
-      customerAddress: data.get('address') as string,
-      customerContact: data.get('contact') as string,
-      paymentMethod: selectedPayment,
-      transactionType: data.get('transactionType') as string || 'DELIVERY',
-      items: items.map(i => ({ menuItemId: i.id, quantity: i.quantity, priceAtPurchase: i.price })),
-    };
-    const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    if (!res.ok) {
-      const errorData = await res.json();
-      const detailStr = errorData.details ? ` [${errorData.details}]` : '';
-      const metaStr = errorData.meta ? ` (${JSON.stringify(errorData.meta)})` : '';
-      alert(`Something went wrong: ${errorData.error || 'Unknown error'}${detailStr}${metaStr}`);
+    try {
+      const form = e.currentTarget;
+      const data = new FormData(form);
+      const selectedPayment = (data.get('paymentMethod') as 'cod' | 'qrph') || 'cod';
+      const payload = {
+        customerName: data.get('name') as string,
+        customerEmail: data.get('email') as string,
+        customerAddress: data.get('address') as string,
+        customerContact: data.get('contact') as string,
+        paymentMethod: selectedPayment,
+        transactionType: data.get('transactionType') as string || 'DELIVERY',
+        items: items.map(i => ({ menuItemId: i.id, quantity: i.quantity, priceAtPurchase: i.price })),
+      };
+      const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) {
+        const errorData = await res.json();
+        const detailStr = errorData.details ? ` [${errorData.details}]` : '';
+        const metaStr = errorData.meta ? ` (${JSON.stringify(errorData.meta)})` : '';
+        alert(`Something went wrong: ${errorData.error || 'Unknown error'}${detailStr}${metaStr}`);
+        return;
+      }
+
+      const order = await res.json();
+      addRecentOrder(order.id);
+
+      if (selectedPayment === 'qrph') {
+        const checkoutRes = await fetch('/api/paymongo/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: order.id,
+            totalAmount: totalWithFee,
+            paymentFee: transactionFee,
+            paymentMethod: selectedPayment,
+            customerName: payload.customerName,
+            customerContact: payload.customerContact,
+          }),
+        });
+
+        const checkout = await checkoutRes.json();
+        if (!checkoutRes.ok) {
+          const detail = checkout?.error ? ` (${checkout.error})` : '';
+          alert(`Online checkout failed${detail}. Please try again or choose Cash on Delivery.`);
+          return;
+        }
+
+        if (checkout?.checkoutUrl) {
+          clearCart();
+          window.location.href = checkout.checkoutUrl as string;
+          return;
+        }
+      }
+
+      clearCart();
+      setOrderId(order.id);
+    } catch (error) {
+      console.error('Checkout submit failed:', error);
+      alert('Something went wrong: Unable to reach the server. Please check your connection and try again.');
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    const order = await res.json();
-    addRecentOrder(order.id);
-
-    if (selectedPayment === 'qrph') {
-      const checkoutRes = await fetch('/api/paymongo/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId: order.id,
-          totalAmount: totalWithFee,
-          paymentFee: transactionFee,
-          paymentMethod: selectedPayment,
-          customerName: payload.customerName,
-          customerContact: payload.customerContact,
-        }),
-      });
-
-      const checkout = await checkoutRes.json();
-      if (!checkoutRes.ok) {
-        const detail = checkout?.error ? ` (${checkout.error})` : '';
-        alert(`Online checkout failed${detail}. Please try again or choose Cash on Delivery.`);
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (checkout?.checkoutUrl) {
-        clearCart();
-        window.location.href = checkout.checkoutUrl as string;
-        return;
-      }
-    }
-
-    clearCart();
-    setOrderId(order.id);
   };
 
   if (orderId) {

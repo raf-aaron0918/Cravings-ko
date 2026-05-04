@@ -21,6 +21,29 @@ type OrderRequestBody = {
   items: OrderRequestItem[];
 };
 
+function isTransientFetchError(error: unknown): boolean {
+  const message = typeof error === 'object' && error && 'message' in error
+    ? String((error as { message?: unknown }).message ?? '')
+    : '';
+  return message.toLowerCase().includes('fetch failed');
+}
+
+async function withRetry<T>(operation: () => Promise<T>, attempts = 3, delayMs = 250): Promise<T> {
+  let lastError: unknown;
+  for (let i = 1; i <= attempts; i += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (!isTransientFetchError(error) || i === attempts) {
+        throw error;
+      }
+      await new Promise(resolve => setTimeout(resolve, delayMs * i));
+    }
+  }
+  throw lastError;
+}
+
 async function sendOrderEmail(params: {
   orderId: string;
   customerName: string;
@@ -326,10 +349,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No valid items found in your cart.' }, { status: 400 });
     }
 
-    const menuItems = await prisma.menuItem.findMany({
+    const menuItems = await withRetry(() => prisma.menuItem.findMany({
       where: { id: { in: requestedItems.map(item => item.menuItemId) } },
       select: { id: true, name: true, imageUrl: true, price: true, outOfStock: true },
-    });
+    }));
     const menuLookup = new Map(menuItems.map(item => [item.id, item]));
     const missingIds = requestedItems.map(item => item.menuItemId).filter(id => !menuLookup.has(id));
     const outOfStockIds = menuItems.filter(item => item.outOfStock).map(item => item.id);
@@ -351,7 +374,7 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    const order = await prisma.order.create({
+    const order = await withRetry(() => prisma.order.create({
       data: {
         customerName,
         customerEmail,
@@ -366,7 +389,7 @@ export async function POST(req: NextRequest) {
           create: orderItems,
         },
       },
-    });
+    }));
 
     const itemLookup = new Map(menuItems.map(item => [item.id, item]));
     
@@ -404,11 +427,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(order, { status: 201 });
   } catch (e: unknown) {
     console.error('CRITICAL ORDER ERROR:', e);
-    const error = e as any;
+    const error = e as { message?: string; code?: string; meta?: unknown };
+    const isFetchFailure = String(error.message || '').toLowerCase().includes('fetch failed');
     return NextResponse.json({ 
-      error: error.message || 'Unknown server error',
-      details: error.code || 'NO_CODE',
-      meta: error.meta || null
+      error: isFetchFailure
+        ? 'Temporary connection issue while saving your order. Please try again in a few seconds.'
+        : error.message || 'Unknown server error',
+      details: error.code || (isFetchFailure ? 'TRANSIENT_FETCH_FAILURE' : 'NO_CODE'),
+      meta: error.meta || null,
     }, { status: 500 });
   }
 }
