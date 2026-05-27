@@ -27,6 +27,7 @@ type Order = {
   cancelReason: string | null;
   transactionType: string | null;
   createdAt: string;
+  completedAt?: string | null;
   items: OrderItem[];
 };
 
@@ -38,7 +39,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [showCompleted, setShowCompleted] = useState(false);
   const [showSales, setShowSales] = useState(false);
-  const [salesRange, setSalesRange] = useState<'today' | 'week' | 'month'>('today');
+  const [salesRange, setSalesRange] = useState<'all' | 'today' | 'week' | 'month'>('all');
+  const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
   const [cancelReasonInput, setCancelReasonInput] = useState('');
   const [cancellingOrder, setCancellingOrder] = useState(false);
@@ -71,7 +73,11 @@ export default function AdminDashboard() {
     });
 
     if (res.ok) {
-      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+      setOrders(prev => prev.map(o => o.id === orderId ? { 
+        ...o, 
+        status: newStatus, 
+        completedAt: newStatus === 'COMPLETED' ? new Date().toISOString() : null 
+      } : o));
     }
   };
 
@@ -125,7 +131,10 @@ export default function AdminDashboard() {
     if (salesRange === 'week') {
       return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     }
-    return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    if (salesRange === 'month') {
+      return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    }
+    return new Date(0);
   })();
 
   const salesByProduct = completedOrders
@@ -178,13 +187,16 @@ export default function AdminDashboard() {
           <div className={styles.salesHeader}>
             <h2 className={styles.sectionTitle}>Sales</h2>
             <div className={styles.rangeChips}>
-              {(['today', 'week', 'month'] as const).map(range => (
+              {(['all', 'today', 'week', 'month'] as const).map(range => (
                 <button
                   key={range}
                   className={`${styles.rangeChip} ${salesRange === range ? styles.rangeChipActive : ''}`}
-                  onClick={() => setSalesRange(range)}
+                  onClick={() => {
+                    setSalesRange(range);
+                    setExpandedProduct(null);
+                  }}
                 >
-                  {range === 'today' ? 'Today' : range === 'week' ? 'This Week' : 'This Month'}
+                  {range === 'all' ? 'All ' : range === 'today' ? 'Today' : range === 'week' ? 'This Week' : 'This Month'}
                 </button>
               ))}
             </div>
@@ -197,14 +209,86 @@ export default function AdminDashboard() {
               <span>Last Sold</span>
             </div>
             {salesRows.length === 0 && <p className={styles.empty}>No sales yet in this range.</p>}
-            {salesRows.map(row => (
-              <div key={row.name} className={styles.salesRow}>
-                <span className={styles.salesName}>{row.name}</span>
-                <span>{row.qty}</span>
-                <span>{formatPeso(row.revenue)}</span>
-                <span>{new Date(row.lastSold).toLocaleString()}</span>
-              </div>
-            ))}
+            {salesRows.map(row => {
+              const isExpanded = expandedProduct === row.name;
+              
+              // Get all order items for this specific product in the current range
+              const productOrders = completedOrders
+                .filter(o => o.status === 'COMPLETED')
+                .filter(o => new Date(o.createdAt) >= rangeStart)
+                .filter(o => o.items.some(item => (item.menuItem?.name || 'Deleted Item') === row.name))
+                .map(o => {
+                  const item = o.items.find(item => (item.menuItem?.name || 'Deleted Item') === row.name)!;
+                  return {
+                    orderId: o.id,
+                    customerName: o.customerName,
+                    createdAt: o.createdAt,
+                    completedAt: o.completedAt,
+                    qty: item.quantity,
+                    priceAtPurchase: item.priceAtPurchase,
+                    total: item.quantity * item.priceAtPurchase
+                  };
+                })
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+              return (
+                <div key={row.name} className={styles.salesRowWrapper}>
+                  <div 
+                    className={`${styles.salesRow} ${styles.expandableRow}`}
+                    onClick={() => setExpandedProduct(prev => prev === row.name ? null : row.name)}
+                  >
+                    <span className={styles.salesName}>
+                      {row.name}
+                      <span className={`${styles.expandArrow} ${isExpanded ? styles.expandArrowExpanded : ''}`}>
+                        ▼
+                      </span>
+                    </span>
+                    <span>{row.qty}</span>
+                    <span>{formatPeso(row.revenue)}</span>
+                    <span>{new Date(row.lastSold).toLocaleString()}</span>
+                  </div>
+                  
+                  {isExpanded && (
+                    <div className={styles.salesDetail} onClick={(e) => e.stopPropagation()}>
+                      <h4 className={styles.detailTitle}>
+                        Order Breakdown ({productOrders.length} transaction{productOrders.length !== 1 ? 's' : ''})
+                      </h4>
+                      <div className={styles.detailTable}>
+                        <div className={styles.detailHeader}>
+                          <span>Order</span>
+                          <span>Customer</span>
+                          <span>Qty</span>
+                          <span>Total</span>
+                          <span>Ordered At</span>
+                          <span>Completed At</span>
+                        </div>
+                        {productOrders.length === 0 && <p className={styles.empty}>No details found.</p>}
+                        {productOrders.map(po => (
+                          <div key={po.orderId} className={styles.detailRow}>
+                            <span>
+                              <Link 
+                                href={`/order-tracker/${po.orderId}`} 
+                                target="_blank" 
+                                className={styles.detailLink}
+                              >
+                                #{po.orderId.slice(-6)}
+                              </Link>
+                            </span>
+                            <span className={styles.detailCustomer}>{po.customerName}</span>
+                            <span>{po.qty}</span>
+                            <span>{formatPeso(po.total)}</span>
+                            <span className={styles.detailDate}>{new Date(po.createdAt).toLocaleString()}</span>
+                            <span className={styles.detailDate}>
+                              {po.completedAt ? new Date(po.completedAt).toLocaleString() : 'N/A'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
@@ -305,7 +389,12 @@ function OrderCard({ order, onStatusChange, onCancel }: { order: Order, onStatus
       <div className={styles.orderHeader}>
         <div>
           <h3>Order #{order.id.slice(-6)}</h3>
-          <p className={styles.date}>{new Date(order.createdAt).toLocaleString()}</p>
+          <p className={styles.date}>Ordered: {new Date(order.createdAt).toLocaleString()}</p>
+          {order.completedAt && (
+            <p className={`${styles.date} ${styles.completedDate}`}>
+              Completed: {new Date(order.completedAt).toLocaleString()}
+            </p>
+          )}
         </div>
           <div className={styles.statusControl}>
           <label>Status:</label>
