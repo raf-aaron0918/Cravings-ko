@@ -39,6 +39,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [showCompleted, setShowCompleted] = useState(false);
   const [showSales, setShowSales] = useState(false);
+  const [salesView, setSalesView] = useState<'date' | 'product'>('date');
   const [salesRange, setSalesRange] = useState<'all' | 'today' | 'week' | 'month'>('all');
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
@@ -132,7 +133,7 @@ export default function AdminDashboard() {
       return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     }
     if (salesRange === 'month') {
-      return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return new Date(now.getFullYear(), now.getMonth(), 1);
     }
     return new Date(0);
   })();
@@ -153,6 +154,10 @@ export default function AdminDashboard() {
     }, {});
 
   const salesRows = Object.values(salesByProduct).sort((a, b) => b.revenue - a.revenue);
+  const completedSalesOrders = completedOrders
+    .filter(o => o.status === 'COMPLETED')
+    .filter(o => new Date(o.createdAt) >= rangeStart)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
     <main className={styles.main}>
@@ -186,21 +191,71 @@ export default function AdminDashboard() {
         <section className={styles.section}>
           <div className={styles.salesHeader}>
             <h2 className={styles.sectionTitle}>Sales</h2>
-            <div className={styles.rangeChips}>
-              {(['all', 'today', 'week', 'month'] as const).map(range => (
-                <button
-                  key={range}
-                  className={`${styles.rangeChip} ${salesRange === range ? styles.rangeChipActive : ''}`}
-                  onClick={() => {
-                    setSalesRange(range);
-                    setExpandedProduct(null);
-                  }}
-                >
-                  {range === 'all' ? 'All ' : range === 'today' ? 'Today' : range === 'week' ? 'This Week' : 'This Month'}
-                </button>
-              ))}
+            <div className={styles.salesControls}>
+              <div className={styles.viewChips}>
+                {([
+                  ['date', 'By Date'],
+                  ['product', 'By Products'],
+                ] as const).map(([view, label]) => (
+                  <button
+                    key={view}
+                    className={`${styles.viewChip} ${salesView === view ? styles.viewChipActive : ''}`}
+                    onClick={() => {
+                      setSalesView(view);
+                      setExpandedProduct(null);
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className={styles.rangeChips}>
+                {(['all', 'today', 'week', 'month'] as const).map(range => (
+                  <button
+                    key={range}
+                    className={`${styles.rangeChip} ${salesRange === range ? styles.rangeChipActive : ''}`}
+                    onClick={() => {
+                      setSalesRange(range);
+                      setExpandedProduct(null);
+                    }}
+                  >
+                    {range === 'all' ? 'All ' : range === 'today' ? 'Today' : range === 'week' ? 'This Week' : 'This Month'}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
+          {salesView === 'date' ? (
+            <div className={styles.salesTable}>
+              <div className={styles.salesDateHeaderRow}>
+                <span>Order</span>
+                <span>Customer</span>
+                <span>Products</span>
+                <span>Total</span>
+                <span>Ordered At</span>
+                <span>Completed At</span>
+              </div>
+              {completedSalesOrders.length === 0 && <p className={styles.empty}>No completed sales yet in this range.</p>}
+              {completedSalesOrders.map(order => (
+                <div key={order.id} className={styles.salesDateRow}>
+                  <span>
+                    <Link href={`/order-tracker/${order.id}`} target="_blank" className={styles.detailLink}>
+                      #{order.id.slice(-6)}
+                    </Link>
+                  </span>
+                  <span className={styles.detailCustomer}>{order.customerName}</span>
+                  <span className={styles.salesItems}>
+                    {order.items.map(item => `${item.quantity}x ${item.menuItem?.name || 'Deleted Item'}`).join(', ')}
+                  </span>
+                  <span>{formatPeso(order.totalAmount)}</span>
+                  <span className={styles.detailDate}>{new Date(order.createdAt).toLocaleString()}</span>
+                  <span className={styles.detailDate}>
+                    {order.completedAt ? new Date(order.completedAt).toLocaleString() : new Date(order.createdAt).toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
           <div className={styles.salesTable}>
             <div className={styles.salesHeaderRow}>
               <span>Product</span>
@@ -290,6 +345,7 @@ export default function AdminDashboard() {
               );
             })}
           </div>
+          )}
         </section>
       )}
 
