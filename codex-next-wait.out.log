@@ -1,8 +1,0 @@
-▲ Next.js 16.1.7 (Turbopack)
-- Local:         http://localhost:3000
-- Network:       http://192.168.1.5:3000
-- Environments: .env
-
-✓ Starting...
-Creating turbopack project { dir: 'C:\\Users\\Coding\\Cravings-ko', testMode: true }
-✓ Ready in 3.9s
